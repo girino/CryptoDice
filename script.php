@@ -32,18 +32,23 @@
 		return $address;
 	}
 
-function get_random($txid, $secret) {
+function get_random($txid, $secret, $cap) {
 	if (is_null($txid)) {
 		return 0;
 	}
 
 	// get two first bytes
 	$hash = hash_hmac('sha256', $txid, $secret); //$config['hash_secret']);
-	$hex = substr($hash, 4, 4);
+	$hash = hash_hmac('sha256', $hash, $secret); // double hash
+	$hex = substr($hash, 32, 4); // not sure if initial zeros are pruned
 	$dec = hexdec ( $hex );
-	$dec = 2.0 * $dec; // makes float
-	$ret = 1.0-$dec/(256.0*256.0);
+	$ret = $dec / 0x8000;
 	print("hex = " . $hex . ", dec = " . $dec . ", ret = " . $ret . "\n");
+	// caps ret
+	if ($ret > $cap) {
+		$ret = $cap;
+		print("capped to: " . $ret . "\n");
+	}
 	return $ret;
 }
 	
@@ -85,7 +90,8 @@ function get_random($txid, $secret) {
 			{
 				$amount = $trans['amount'];
 				// TODO: get random seed from db
-				$topay = $amount * (1.0 + get_random($trans['txid'], $config['hash_secret'])) * (1.0 - $config['income']);
+				$topay = $amount * get_random($trans['txid'], $config['hash_secret'], (2.0 - $config['income']));
+				print("Randomized to: " . $topay . "\n");
 				print("Transaction added! [" . $amount . "]\n");
 				$address = getAddress($trans);
 
