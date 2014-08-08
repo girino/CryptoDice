@@ -31,8 +31,24 @@
 		$address = $transactionin['vout'][!$vinvout]['scriptPubKey']['addresses'][0];
 		return $address;
 	}
+
+function get_random($txid, $secret) {
+	if (is_null($txid)) {
+		return 0;
+	}
+
+	// get two first bytes
+	$hash = hash_hmac('sha256', $txid, $secret); //$config['hash_secret']);
+	$hex = substr($hash, 0, 4);
+	$dec = hexdec ( $hex );
+	$dec = 2.0 * $dec; // makes float
+	$ret = 1.0-$dec/(256.0*256.0);
+	print("hex = " . $hex . ", dec = " . $dec . ", ret = " . $ret . "\n");
+	return $ret;
+}
 	
-	while(true)
+	//while(true)
+	if(true)
 	{
 		// Parsing and adding new transactions to database
 		print("Parsing transactions...\n");
@@ -53,10 +69,10 @@
 					if ($trans['amount'] < 0)
 						continue;
 
-					if ($config['sendback'])
-						$client->sendtoaddress(getAddress($trans), $trans['amount'] - ($trans['amount'] * $config['fee']));
-					else
-						$client->sendtoaddress($config['ownaddress'], $trans['amount'] - ($trans['amount'] * $config['fee']));
+					//if ($config['sendback'])
+						//$client->sendtoaddress(getAddress($trans), $trans['amount'] - ($trans['amount'] * $config['fee']));
+					//else
+						//$client->sendtoaddress($config['ownaddress'], $trans['amount'] - ($trans['amount'] * $config['fee']));
 						
 					mysql_query("INSERT INTO `transactions` (`id`, `amount`, `topay`, `address`, `state`, `tx`, `date`) VALUES (NULL, '" . $trans['amount'] . "', '0', '0', '3', '" . $trans['txid'] . "', " . (time()) . ");");
 					print($trans['amount'] + " - Payment has been sent to you!\n");
@@ -68,7 +84,8 @@
 			if (!mysql_fetch_assoc($query)) // Transaction not found in DB
 			{
 				$amount = $trans['amount'];
-				$topay = $amount * (1.0 + $config['income']);
+				// TODO: get random seed from db
+				$topay = $amount * (1.0 + get_random($trans['txid'], $config['hash_secret'])) * (1.0 - $config['income']);
 				print("Transaction added! [" . $amount . "]\n");
 				$address = getAddress($trans);
 
@@ -102,13 +119,15 @@
 			$query = mysql_query('SELECT * FROM `transactions` WHERE `state` = 1 ORDER BY `date` ASC;');
 			while($row = mysql_fetch_assoc($query))
 			{
-				$txout = $client->sendfrom($config['ponziacc'], $row['address'], round((float)$row['topay'], 4) - ($row['amount'] * $config['fee']));
+				// do not actually send for now
+				//$txout = $client->sendfrom($config['ponziacc'], $row['address'], round((float)$row['topay'], 4) - ($row['amount'] * $config['fee']));
+				$txout = "not actually sent...                ";
 				mysql_query("UPDATE `transactions` SET `state` = 2, `out` = '" . $txout . "' WHERE `id` = " . $row['id'] . ";");
 				print($row['topay'] . " " . $config['val'] ." sent to " . $row['address'] . ".\n");
 			}
 		}
 
-		echo ("Waiting...\n");
-		sleep(20);
+		echo ("Finished...\n");
+		//sleep(20);
 	}
 ?>

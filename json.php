@@ -23,7 +23,7 @@
 	
 	$json['transactions'] = $transactions;
 	
-	// Actual transaction
+	// Actual transaction -- should be "current", since actual means something else
 	$query = mysql_query('SELECT * FROM `transactions` WHERE `amount` > 0 AND `state` = 0 ORDER BY date ASC LIMIT 1;');
 	$json['actual'] = mysql_fetch_assoc($query);
 	
@@ -49,7 +49,11 @@
 		$json['unpaid'] = $query[0];
 	
 	// Paid
-	$json['paid'] = ($json['received'] * (1 + $config['income'])) - $json['unpaid'];
+	$query = mysql_query("SELECT SUM(topay) FROM `transactions` WHERE `state` > 0 AND `state` < 3;");
+	$query = mysql_fetch_row($query);
+	$json['paid'] = $query[0];
+
+	//$json['paid'] = ($json['received'] * (1 + $config['income'])) - $json['unpaid'];
 	
 	echo json_encode($json);
 ?>

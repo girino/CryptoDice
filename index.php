@@ -1,13 +1,13 @@
 <?php include('header.php'); ?>
 <div class="jumbotron" style="text-align: center;">
   <h1><?php echo $config['full-name'] ?></h1>
-  <p>Send <?php echo $config['val'] ?>. Get <strong><?php echo(100 + ($config['income'] * 100)) ?>%</strong> back when the next person sends.</p>
+  <p>Send <?php echo $config['val'] ?>. Get up to <strong><?php echo(200 - ($config['income'] * 100)) ?>%</strong> back when it confirms.</p>
   <div id="address-wrapper" style="overflow: hidden;">
 		<a href="<?php echo($config['blockchain-addr'] . $config['address']) ?>">
 			<strong><?php echo $config['address'] ?></strong>
 		</a>
 	</div>
-	Send <span class="label label-info"><?php echo $config['min'] ?> < amount < <?php echo $config['max'] ?> <?php echo $config['val'] ?></span> and get back <?php echo(100 + ($config['income'] * 100)) ?>%!<br>
+	Send <span class="label label-info"><?php echo $config['min'] ?> < amount < <?php echo $config['max'] ?> <?php echo $config['val'] ?></span> and win up to <?php echo(100 - ($config['income'] * 100)) ?>%!<br>
 	Note: <strong>do not</strong> send from a web wallet.<br>
 	
 	<?php if($config['fee'] > 0): ?>
@@ -41,9 +41,10 @@
 			<thead>
 				<tr>
 					<td style="width: 6%;"></td>
-					<td style="width: 40%">Transaction</td>
-					<td style="width: 24%">Amount</td>
-					<td style="width: 30%">Date</td>
+					<td style="width: 30%">Transaction</td>
+					<td style="width: 22%">Amount</td>
+					<td style="width: 22%">Prize</td>
+					<td style="width: 15%">Date</td>
 				</tr>
 			</thead>
 			<tbody id="trans"></tbody>
@@ -120,6 +121,9 @@
 							out = '<br>OUT: <a href="<?php echo $config['blockchain-tx'] ?>' + data['transactions'][i]['out'] + '">' + data['transactions'][i]['out'].substring(0,25) + '...</a>';
 						
 						$td = $('<td style="text-align: left;">IN: <a href="<?php echo $config['blockchain-tx'] ?>' + data['transactions'][i]['tx'] + '">' + data['transactions'][i]['tx'].substring(0,26) + '...</a>' + out + '</td>');
+						$($tr).append($td);
+						
+						$td = $('<td>' + parseFloat(data['transactions'][i]['amount']).toFixed(<?php echo $config['precision'] ?>) + ' <?php echo $config['val'] ?></td>');
 						$($tr).append($td);
 						
 						$td = $('<td>' + parseFloat(data['transactions'][i]['topay']).toFixed(<?php echo $config['precision'] ?>) + ' <?php echo $config['val'] ?></td>');
