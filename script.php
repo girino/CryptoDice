@@ -39,7 +39,7 @@ function get_random($txid, $secret) {
 
 	// get two first bytes
 	$hash = hash_hmac('sha256', $txid, $secret); //$config['hash_secret']);
-	$hex = substr($hash, 0, 4);
+	$hex = substr($hash, 4, 4);
 	$dec = hexdec ( $hex );
 	$dec = 2.0 * $dec; // makes float
 	$ret = 1.0-$dec/(256.0*256.0);
