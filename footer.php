@@ -1,5 +1,5 @@
 	<div id="footer">
-		<p>&copy; 2014 Crypton | Powered by <a href="https://github.com/Crypton33/CryptoPonzi">CryptoPonzi</a> script</p>
+		<p>&copy; 2014 Crypton | &copy; 2014 Girino Vey! | Powered by <a href="https://github.com/girino/CryptoDice">CryptoDice</a> script</p>
 	</div>
 	</div>
 </body>
