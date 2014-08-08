@@ -3,37 +3,39 @@
 		'user' => 'root',
 		'password' => '',
 		'host' => 'localhost',
-		'database' => 'btc'
+		'database' => 'dice'
 	);
 
 	mysql_connect($mysql['host'], $mysql['user'], $mysql['password']) or die("Cannot connect to database.");
 	mysql_select_db($mysql['database']);
 	
 	$rpc = array(
-		'login' => 'RPC_login',
-		'password' => 'RPC_password',
+		'login' => 'RPC_USER',
+		'password' => 'RPC_PASS',
 		'ip' => '127.0.0.1',
-		'port' => '8332'
+		'port' => '21057'
 	);
 	
 	$config = array(
-		'name' => 'BitPonzi',																	// Name of your ponzi
-		'title' => 'get rich!',																// Description
-		'full-name' => 'Bitcoin Ponzi',												// Full name of your ponzi
-		'val' => 'BTC',																				// Cryptocurrency abbreviation
+		'name' => 'DilmaDice',																	// Name of your ponzi
+		'title' => 'Mega Sena que se cuide!',																// Description
+		'full-name' => 'Loteria Dilmacoin',												// Full name of your ponzi
+		'val' => 'HUE',																				// Cryptocurrency abbreviation
 		'precision' => 4,
-		'confirmations' => 1,																	// Minimum number of confirmations to add transaction
-		'min' => 0.001,																				// Minimum pay in
-		'max' => 0.25,																				// Maximum pay in
+		'confirmations' => 3,																	// Minimum number of confirmations to add transaction
+		'min' => 1.0,																				// Minimum pay in
+		'max' => 100,																				// Maximum pay in
 		'income' => 0.1,																			// How much money to send - default: 0.1 - 110%
 		'fee' => 0.01,																				// Fee taken from pay in amount
-		'payout-check' => 180,																// Time between payouts
-		'ownaddress' => '1MSkXPRK293dDMD5ds6KqVtyDadDkRyanX', // Your address
-		'sendback' => false,																	// What to do with txs that are over maximum or under minimum | true - send back, false - send to your address
-		'ponziacc' => 'btc',																	// Name of daemon account
-		'address' => '1ponzisApJfHtgrwP7CrpfEgseBmPcRD4',			// Ponzi address
+		'payout-check' => 120,																// Time between payouts
+		'ownaddress' => 'DGirino9uDPavPkNejRHmhjdAwujaQhm7e', // Your address
+		'sendback' => true,																	// What to do with txs that are over maximum or under minimum | true - send back, false - send to your address
+		'ponziacc' => 'hue',																	// Name of daemon account
+		'address' => 'DDiceLFx5TY5Puq2exuk8AywHbkJPN62nB',			// Ponzi address
 		'privkey' => '',																			// Needed in setup, private key of your address
-		'blockchain-addr' => 'https://blockchain.info/en/address/',
-		'blockchain-tx' => 'https://blockchain.info/en/tx/'
+		'blockchain-addr' => 'http://dilmaexplorer.girino.org/address/',
+		'blockchain-tx' => 'http://dilmaexplorer.girino.org/tx/',
+	// for randomness
+		'hash_secret' => 'YOUR_SECRET'
 	);
 ?>
