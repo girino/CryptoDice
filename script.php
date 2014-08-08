@@ -69,10 +69,10 @@ function get_random($txid, $secret) {
 					if ($trans['amount'] < 0)
 						continue;
 
-					//if ($config['sendback'])
-						//$client->sendtoaddress(getAddress($trans), $trans['amount'] - ($trans['amount'] * $config['fee']));
-					//else
-						//$client->sendtoaddress($config['ownaddress'], $trans['amount'] - ($trans['amount'] * $config['fee']));
+					if ($config['sendback'])
+						$client->sendtoaddress(getAddress($trans), $trans['amount'] - ($trans['amount'] * $config['fee']));
+					else
+						$client->sendtoaddress($config['ownaddress'], $trans['amount'] - ($trans['amount'] * $config['fee']));
 						
 					mysql_query("INSERT INTO `transactions` (`id`, `amount`, `topay`, `address`, `state`, `tx`, `date`) VALUES (NULL, '" . $trans['amount'] . "', '0', '0', '3', '" . $trans['txid'] . "', " . (time()) . ");");
 					print($trans['amount'] + " - Payment has been sent to you!\n");
@@ -113,15 +113,15 @@ function get_random($txid, $secret) {
 		}
 		
 		// Paying out
-		if (time() - $lastPayout > $config['payout-check'])
+		//if (time() - $lastPayout > $config['payout-check'])
+		if (true)
 		{
 			$lastPayout = time();
 			$query = mysql_query('SELECT * FROM `transactions` WHERE `state` = 1 ORDER BY `date` ASC;');
 			while($row = mysql_fetch_assoc($query))
 			{
 				// do not actually send for now
-				//$txout = $client->sendfrom($config['ponziacc'], $row['address'], round((float)$row['topay'], 4) - ($row['amount'] * $config['fee']));
-				$txout = "not actually sent...                ";
+				$txout = $client->sendfrom($config['ponziacc'], $row['address'], round((float)$row['topay'], 4) - ($row['amount'] * $config['fee']));
 				mysql_query("UPDATE `transactions` SET `state` = 2, `out` = '" . $txout . "' WHERE `id` = " . $row['id'] . ";");
 				print($row['topay'] . " " . $config['val'] ." sent to " . $row['address'] . ".\n");
 			}
