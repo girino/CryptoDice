@@ -83,8 +83,9 @@ function get_random($value, $txid, $blockid) {
 			
 			if ($trans['category'] != "receive" || $trans["confirmations"] < $config['confirmations'])
 				continue;
-			
-			if ($trans['blocktime'] && $config['begin_date'] && $trans['blocktime'] <= $config['begin_date']) {
+
+			if ($trans['blocktime'] <= $config['begin_date']) {
+				print ("Ignoring transactions before ". $config['begin_date'] . "\n");
 				continue;
 			}
 							
