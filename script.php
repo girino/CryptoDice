@@ -85,7 +85,9 @@ function get_random($txid, $blockid, $secret, $pot_fee) {
 					if ($config['sendback'])
 						$address = getAddress($trans);
 					
-					mysql_query("INSERT INTO `transactions` (`id`, `amount`, `topay`, `address`, `state`, `tx`, `date`, `block`, `secret`, `pot_fee`, `fee`) VALUES (NULL, '" . $amount . "', '" . $topay . "', '" . $address . "', '" . STATE_SENTBACK_READY . "', '" . $trans['txid'] . "', " . (time()) . ", '" . $trans['blockhash'] . "', '" . $config['hash_secret'] . "', " . $config['pot_fee'] . ", " . $config['fee'] . ");");
+					if (!mysql_query("INSERT INTO `transactions` (`id`, `amount`, `topay`, `address`, `state`, `tx`, `date`, `block`, `secret`, `pot_fee`, `fee`) VALUES (NULL, '" . $amount . "', '" . $topay . "', '" . $address . "', '" . STATE_SENTBACK_READY . "', '" . $trans['txid'] . "', " . (time()) . ", '" . $trans['blockhash'] . "', '" . $config['hash_secret'] . "', " . $config['pot_fee'] . ", " . $config['fee'] . ");")) {
+							print("ERROR INSERTING!!!\nSQL: INSERT INTO `transactions` (`id`, `amount`, `topay`, `address`, `state`, `tx`, `date`, `block`, `secret`, `pot_fee`, `fee`) VALUES (NULL, '" . $amount . "', '" . $topay . "', '" . $address . "', '" . STATE_SENTBACK_READY . "', '" . $trans['txid'] . "', " . (time()) . ", '" . $trans['blockhash'] . "', '" . $config['hash_secret'] . "', " . $config['pot_fee'] . ", " . $config['fee'] . ");");
+					}
 					print($trans['amount'] + " - Payment will be sent back!\n");
 				} else {
 				
@@ -95,7 +97,9 @@ function get_random($txid, $blockid, $secret, $pot_fee) {
 					print("Randomized to: " . $topay . "\n");
 					$address = getAddress($trans);
 	
-					mysql_query("INSERT INTO `transactions` (`id`, `amount`, `topay`, `address`, `state`, `tx`, `date`, `block`, `secret`, `pot_fee`, `fee`) VALUES (NULL, '" . $amount . "', '" . $topay . "', '" . $address . "', '" . STATE_INITIAL . "', '" . $trans['txid'] . "', " . (time()) . ", '" . $trans['blockhash'] . "', '" . $config['hash_secret'] . "', " . $config['pot_fee'] . ", " . $config['fee'] . ");");
+					if (!mysql_query("INSERT INTO `transactions` (`id`, `amount`, `topay`, `address`, `state`, `tx`, `date`, `block`, `secret`, `pot_fee`, `fee`) VALUES (NULL, '" . $amount . "', '" . $topay . "', '" . $address . "', '" . STATE_INITIAL . "', '" . $trans['txid'] . "', " . (time()) . ", '" . $trans['blockhash'] . "', '" . $config['hash_secret'] . "', " . $config['pot_fee'] . ", " . $config['fee'] . ");")) {
+							print("ERROR INSERTING!!!\nSQL: INSERT INTO `transactions` (`id`, `amount`, `topay`, `address`, `state`, `tx`, `date`, `block`, `secret`, `pot_fee`, `fee`) VALUES (NULL, '" . $amount . "', '" . $topay . "', '" . $address . "', '" . STATE_INITIAL . "', '" . $trans['txid'] . "', " . (time()) . ", '" . $trans['blockhash'] . "', '" . $config['hash_secret'] . "', " . $config['pot_fee'] . ", " . $config['fee'] . ");");
+					}
 					print("Transaction added! [" . $amount . "]\n");
 				}
 			}
