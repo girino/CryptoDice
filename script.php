@@ -95,34 +95,30 @@ function get_random($value, $txid, $blockid) {
 			$query = mysql_query('SELECT * FROM `transactions` WHERE `tx` = "'.$trans['txid'].'";');
 			if (!mysql_fetch_assoc($query)) // Transaction not found in DB
 			{
+				$amount = $trans['amount'];
 				if ($trans['amount'] > $config['max'] || $trans['amount'] < $config['min'])
 				{
-
-					$amount = $trans['amount'];
 					$topay = charge_fee($amount);
 					print("will pay back: " . $topay . "\n");
 					$address = $config['ownaddress'];
 					if ($config['sendback'])
 						$address = getAddress($trans);
-					$SQL = "INSERT INTO `transactions` (`id`, `amount`, `topay`, `address`, `state`, `tx`, `date`, `block`, `secret`, `pot_fee`, `fee`) VALUES (NULL, '" . $amount . "', '" . $topay . "', '" . $address . "', '" . STATE_SENTBACK_READY . "', '" . $trans['txid'] . "', " . (time()) . ", '" . $trans['blockhash'] . "', '" . $config['hash_secret'] . "', " . $config['pot_fee'] . ", " . $config['fee'] . ");";
-					if (!mysql_query($SQL)) {
-							print("ERROR INSERTING!!!\nSQL: " . $SQL);
-					}
-					print($trans['amount'] + " - Payment will be sent back!\n");
+					$state = STATE_SENTBACK_READY;
 				} else {
-				
-					$amount = $trans['amount'];
-					// TODO: get random seed from db
 					$topay = get_random($amount, $trans['txid'], $trans['blockhash']);
 					print("Randomized to: " . $topay . "\n");
 					$address = getAddress($trans);
-	
-					$SQL = "INSERT INTO `transactions` (`id`, `amount`, `topay`, `address`, `state`, `tx`, `date`, `block`, `secret`, `pot_fee`, `fee`) VALUES (NULL, '" . $amount . "', '" . $topay . "', '" . $address . "', '" . STATE_INITIAL . "', '" . $trans['txid'] . "', " . (time()) . ", '" . $trans['blockhash'] . "', '" . $config['hash_secret'] . "', " . $config['pot_fee'] . ", " . $config['fee'] . ");";
-					if (!mysql_query($SQL)) {
-							print("ERROR INSERTING!!!\nSQL: " . $SQL);
-					}
-					print("Transaction added! [" . $amount . "]\n");
+					$state = STATE_INITIAL;
 				}
+				if ($trans['blocktime'] <= $config['begin_date']) {
+					print ("Ignoring transactions before ". $config['begin_date'] . "\n");
+					$state = STATE_ARCHIVED;
+				}
+				$SQL = "INSERT INTO `transactions` (`id`, `amount`, `topay`, `address`, `state`, `tx`, `date`, `block`, `secret`, `pot_fee`, `fee`) VALUES (NULL, '" . $amount . "', '" . $topay . "', '" . $address . "', '" . $state . "', '" . $trans['txid'] . "', " . (time()) . ", '" . $trans['blockhash'] . "', '" . $config['hash_secret'] . "', " . $config['pot_fee'] . ", " . $config['fee'] . ");";
+				if (!mysql_query($SQL)) {
+						print("ERROR INSERTING!!!\nSQL: " . $SQL);
+				}
+				print("Transaction added! [" . $amount . "]\n");
 			}
 		}
 		
