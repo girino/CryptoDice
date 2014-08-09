@@ -6,6 +6,12 @@
 
 	$lastPayout = time();
 	$adresses = array();
+	
+	dice_round(1);
+	
+	function dice_round($value) {
+		print_r($config);
+	}
 
 	function getAddress($trans)
 	{
