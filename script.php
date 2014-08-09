@@ -85,6 +85,7 @@ function get_random($value, $txid, $blockid) {
 				continue;
 			
 			if ($trans['blocktime'] && $config['begin_date'] && $trans['blocktime'] <= $config['begin_date']) {
+				print ("ignoring transactions before ". $config['begin_date'] . "\n");
 				continue;
 			}
 							
