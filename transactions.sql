@@ -35,16 +35,13 @@ CREATE TABLE IF NOT EXISTS `transactions` (
   `tx` varchar(255) NOT NULL,
   `out` varchar(255) NOT NULL,
   `date` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=36 ;
-
-CREATE TABLE IF NOT EXISTS `secret` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `date` int(11) NOT NULL DEFAULT '0',
+  `out_date` int(11) NOT NULL DEFAULT '0',
+  `block` varchar(255) NOT NULL,
   `secret` varchar(255) NOT NULL,
+  `pot_fee` decimal(15,8) NOT NULL DEFAULT '0',
+  `fee` decimal(15,8) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=36 ;
-
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
