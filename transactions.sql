@@ -30,7 +30,6 @@ CREATE TABLE IF NOT EXISTS `transactions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `amount` decimal(15,8) NOT NULL,
   `topay` decimal(15,8) NOT NULL,
-  `actually_paid` decimal(15,8) NOT NULL DEFAULT '0',
   `address` varchar(64) NOT NULL,
   `state` int(11) NOT NULL DEFAULT '0',
   `tx` varchar(255) NOT NULL,
