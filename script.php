@@ -152,7 +152,7 @@ function get_random($value, $txid, $blockid) {
 				// checks if payback
 				if ($row['state'] == STATE_SENTBACK_READY) {
 					$value = charge_fee($row['topay']);
-					$client->sendtoaddress( $row['address'], $value );
+					$txout = $client->sendtoaddress( $row['address'], $value );
 					mysql_query("UPDATE `transactions` SET `state` = ". STATE_SENTBACK .", `out` = '" . $txout . "', `out_date` = '" . (time()) . "' WHERE `id` = " . $row['id'] . ";");
 					print($row['topay'] . " " . $config['val'] ." paid back to " . $row['address'] . ".\n");
 				} else {
