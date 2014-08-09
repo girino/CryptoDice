@@ -36,6 +36,8 @@
 		'blockchain-addr' => 'http://dilmaexplorer.girino.org/address/',
 		'blockchain-tx' => 'http://dilmaexplorer.girino.org/tx/',
 	// for randomness
-		'hash_secret' => 'YOUR_SECRET'
+		'hash_secret' => 'YOUR_SECRET',
+	// ignore transactions before this date
+		'begin_date' => '0'
 	);
 ?>
