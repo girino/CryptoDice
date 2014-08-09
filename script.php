@@ -93,10 +93,10 @@ function get_random($txid, $blockid, $secret, $pot_fee) {
 					// TODO: get random seed from db
 					$topay = $amount * get_random($trans['txid'], $trans['blockhash'], $config['hash_secret'], $config['pot_fee']);
 					print("Randomized to: " . $topay . "\n");
-					print("Transaction added! [" . $amount . "]\n");
 					$address = getAddress($trans);
 	
 					mysql_query("INSERT INTO `transactions` (`id`, `amount`, `topay`, `address`, `state`, `tx`, `date`, `block`, `secret`, `pot_fee`, `fee`) VALUES (NULL, '" . $amount . "', '" . $topay . "', '" . $address . "', '" . STATE_INITIAL . "', '" . $trans['txid'] . "', " . (time()) . ", " . $trans['blockhash'] . ", " . $config['hash_secret'] . ", " . $config['pot_fee'] . ", " . $config['fee'] . ");");
+					print("Transaction added! [" . $amount . "]\n");
 				}
 			}
 		}
