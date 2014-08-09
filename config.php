@@ -25,7 +25,7 @@
 		'confirmations' => 3,																	// Minimum number of confirmations to add transaction
 		'min' => 1.0,																				// Minimum pay in
 		'max' => 100,																				// Maximum pay in
-		'income' => 0.1,																			// How much money to send - default: 0.1 - 110%
+		'pot_fee' => 0.04,																			// How much money to send - default: 0.1 - 110%
 		'fee' => 0.01,																				// Fee taken from pay in amount
 		'payout-check' => 120,																// Time between payouts
 		'ownaddress' => 'DGirino9uDPavPkNejRHmhjdAwujaQhm7e', // Your address
