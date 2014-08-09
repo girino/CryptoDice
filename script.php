@@ -93,7 +93,7 @@ function get_random($value, $txid, $blockid) {
 				$amount = $trans['amount'];
 				if ($trans['amount'] > $config['max'] || $trans['amount'] < $config['min'])
 				{
-					$topay = charge_fee($amount);
+					$topay = $amount; // fee charged when actually paying
 					print("will pay back: " . $topay . "\n");
 					$address = $config['ownaddress'];
 					if ($config['sendback'])
