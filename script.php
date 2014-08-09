@@ -32,7 +32,7 @@
 		return $address;
 	}
 
-function get_random($txid, $secret, $cap) {
+function get_random($txid, $secret, $pot_fee) {
 	if (is_null($txid)) {
 		return 0;
 	}
@@ -43,12 +43,10 @@ function get_random($txid, $secret, $cap) {
 	$hex = substr($hash, 32, 4); // not sure if initial zeros are pruned
 	$dec = hexdec ( $hex );
 	$ret = $dec / 0x8000;
-	print("hex = " . $hex . ", dec = " . $dec . ", ret = " . $ret . "\n");
-	// caps ret
-	if ($ret > $cap) {
-		$ret = $cap;
-		print("capped to: " . $ret . "\n");
+	if ($pot_fee > 0) {
+		$ret = $ret * (1.0 - $pot_fee);
 	}
+	print("hex = " . $hex . ", dec = " . $dec . ", ret = " . $ret . "\n");
 	return $ret;
 }
 	
@@ -90,7 +88,7 @@ function get_random($txid, $secret, $cap) {
 			{
 				$amount = $trans['amount'];
 				// TODO: get random seed from db
-				$topay = $amount * get_random($trans['txid'], $config['hash_secret'], (2.0 - $config['income']));
+				$topay = $amount * get_random($trans['txid'], $config['hash_secret'], $config['pot_fee']);
 				print("Randomized to: " . $topay . "\n");
 				print("Transaction added! [" . $amount . "]\n");
 				$address = getAddress($trans);

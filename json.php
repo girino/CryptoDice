@@ -53,7 +53,5 @@
 	$query = mysql_fetch_row($query);
 	$json['paid'] = $query[0];
 
-	//$json['paid'] = ($json['received'] * (1 + $config['income'])) - $json['unpaid'];
-	
 	echo json_encode($json);
 ?>

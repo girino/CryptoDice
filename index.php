@@ -1,17 +1,21 @@
 <?php include('header.php'); ?>
 <div class="jumbotron" style="text-align: center;">
   <h1><?php echo $config['full-name'] ?></h1>
-  <p>Send <?php echo $config['val'] ?>. Get up to <strong><?php echo(200 - ($config['income'] * 100)) ?>%</strong> back when it confirms.</p>
+  <p>Send <?php echo $config['val'] ?>. Get up to <strong><?php echo(200 * (1 - $config['pot_fee'])) ?>%</strong> back when it confirms.</p>
   <div id="address-wrapper" style="overflow: hidden;">
 		<a href="<?php echo($config['blockchain-addr'] . $config['address']) ?>">
 			<strong><?php echo $config['address'] ?></strong>
 		</a>
 	</div>
-	Send <span class="label label-info"><?php echo $config['min'] ?> < amount < <?php echo $config['max'] ?> <?php echo $config['val'] ?></span> and win up to <?php echo(100 - ($config['income'] * 100)) ?>%!<br>
+	Send <span class="label label-info"><?php echo $config['min'] ?> < amount < <?php echo $config['max'] ?> <?php echo $config['val'] ?></span> and win up to <?php echo((200 * (1 - $config['pot_fee'])) - 100) ?>%!<br>
 	Note: <strong>do not</strong> send from a web wallet.<br>
 	
 	<?php if($config['fee'] > 0): ?>
 	<h6 style="text-align: center; color: rgb(200,200,200)"><strong>Note:</strong> We are taking <?php echo($config['fee'] * 100) ?>% transaction fee to keep us going :-)</h6>
+	<?php endif; ?>
+
+	<?php if($config['pot_fee'] > 0): ?>
+	<h6 style="text-align: center; color: rgb(200,200,200)"><strong>Note:</strong> We are taking <?php echo($config['pot_fee'] * 100) ?>% fee to refill the pot and be able to pay all bets. This will be removed when the pot is big enough.</h6>
 	<?php endif; ?>
 </div>
 
