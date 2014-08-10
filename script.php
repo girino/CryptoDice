@@ -149,7 +149,7 @@ function get_random($value, $txid, $blockid) {
 	// Paying out
 	if (time() - $lastPayout > $config['payout-check'])
 	{
-		$query = mysql_query('SELECT * FROM `transactions` WHERE `state` = '. STATE_READY .' OR `state` = '. STATE_SENTBACK_READY .' ORDER BY `date` ASC;');
+		$query = mysql_query('SELECT * FROM `transactions` WHERE `state` = in ('. STATE_READY .', '. STATE_SENTBACK_READY .', ' . STATE_CASH_OUT_READY . ') ORDER BY `date` ASC;');
 		while($row = mysql_fetch_assoc($query))
 		{
 			// checks if payback
@@ -157,6 +157,10 @@ function get_random($value, $txid, $blockid) {
 				$value = charge_fee($row['topay']);
 				$txout = $client->sendtoaddress( $row['address'], $value );
 				$state = STATE_SENTBACK;
+			} elseif ($row['state'] == STATE_CASH_OUT_READY) {
+				$value = charge_fee($row['topay']);
+				$txout = $client->sendtoaddress( $row['address'], $value );
+				$state = STATE_CASH_OUT;
 			} else {
 				$value = charge_fee($row['topay']);
 				$txout = $client->sendfrom( $config['ponziacc'], $row['address'], $value );

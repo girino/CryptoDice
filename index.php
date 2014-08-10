@@ -113,6 +113,8 @@
 							state = '<span class="label label-success" id="collecting">Sent</span>';
 						else if (data['transactions'][i]['state'] == "<?php echo STATE_POT_REFILL ?>")
 							state = '<span class="label label-danger" id="collecting">Pot Refill</span>';
+						else if (data['transactions'][i]['state'] == "<?php echo STATE_CASH_OUT ?>")
+							state = '<span class="label label-danger" id="collecting">Cash out</span>';
 						else
 							state = '<span class="label label-default" id="collecting">Waiting</span>';
 					
