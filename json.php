@@ -4,7 +4,7 @@
 	$json = array();
 	
 	if ($_GET['what'] == "all" || $_GET['what'] == "")
-		$query = mysql_query('SELECT * FROM `transactions` WHERE `amount` > 0 AND `state` < ' . STATE_SENTBACK_READY . ' ORDER BY id DESC, state DESC LIMIT 20;');
+		$query = mysql_query('SELECT * FROM `transactions` WHERE (`amount` > 0 OR `topay` > 0) AND `state` < ' . STATE_SENTBACK_READY . ' ORDER BY id DESC, state DESC LIMIT 20;');
 	else
 		$query = mysql_query('SELECT * FROM `transactions` WHERE `tx` = "' . mysql_real_escape_string($_GET['what']) . '" AND `state` < ' . STATE_SENTBACK_READY . ' LIMIT 1;');
 
