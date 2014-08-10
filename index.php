@@ -1,4 +1,5 @@
 <?php include('header.php'); ?>
+<?php include('constants.php'); ?>
 <div class="jumbotron" style="text-align: center;">
   <h1><?php echo $config['full-name'] ?></h1>
   <p>Send <?php echo $config['val'] ?>. Get up to <strong><?php echo(200 * (1 - $config['pot_fee'])) ?>%</strong> back when it confirms.</p>
