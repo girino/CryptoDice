@@ -84,7 +84,8 @@ if ($version == 1) {
 			  `secret` varchar(255) NOT NULL DEFAULT '',
 			  `pot_fee` decimal(15,8) NOT NULL DEFAULT '0',
 			  `fee` decimal(15,8) NOT NULL DEFAULT '0',
-			  `actually_paid` decimal(15,8) NOT NULL DEFAULT '0' );";
+			  `actually_paid` decimal(15,8) NOT NULL DEFAULT '0',
+			  `version` int(11) NOT NULL DEFAULT '0' );";
 	if (!mysql_query($sql)) {
 		die("ERROR adding columns to transactions table: " . $sql . "\n");
 	}
@@ -94,6 +95,11 @@ if ($version == 1) {
 	print("Updating transactions table...\n");
 	// state 3 is now state 6
 	$sql = "UPDATE `transactions` SET `state` = 6 where state = 3;";
+	if (!mysql_query($sql)) {
+		die("ERROR updating transactions table: " . $sql . "\n");
+	}
+	// version of old algorithm is 1
+	$sql = "UPDATE `transactions` SET `version` = 1;";
 	if (!mysql_query($sql)) {
 		die("ERROR updating transactions table: " . $sql . "\n");
 	}
