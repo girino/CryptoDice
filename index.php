@@ -132,7 +132,7 @@
 						if (data['transactions'][i]['out']) {
 							if (data['transactions'][i]['tx']) 
 								out = "<br>";
-							out = out + 'OUT: <a href="<?php echo $config['blockchain-tx'] ?>' + data['transactions'][i]['out'] + '">' + data['transactions'][i]['out'].substring(18) + '...</a>';
+							out = out + 'OUT: <a href="<?php echo $config['blockchain-tx'] ?>' + data['transactions'][i]['out'] + '">' + data['transactions'][i]['out'].substring(0,18) + '...</a>';
 						}
 
 						$td = $('<td style="text-align: left;">' + tx + out + '</td>');
