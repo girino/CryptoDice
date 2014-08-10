@@ -170,7 +170,7 @@ function get_random($value, $txid, $blockid) {
 				$txout = $client->sendtoaddress( $row['address'], $value );
 				$state = STATE_SENTBACK;
 			} elseif ($row['state'] == STATE_CASH_OUT_READY) {
-				$value = charge_fee($row['topay']);
+				$value = $row['topay']; // no fee for cash out
 				$txout = $client->sendtoaddress( $row['address'], $value );
 				$state = STATE_CASH_OUT;
 			} else {
