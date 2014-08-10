@@ -46,9 +46,9 @@
 			<thead>
 				<tr>
 					<td style="width: 6%;"></td>
-					<td style="width: 30%">Transaction</td>
-					<td style="width: 22%">Amount</td>
-					<td style="width: 22%">Prize</td>
+					<td style="width: 34%">Transaction</td>
+					<td style="width: 20%">Amount</td>
+					<td style="width: 20%">Prize</td>
 					<td style="width: 15%">Date</td>
 				</tr>
 			</thead>
