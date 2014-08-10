@@ -46,9 +46,9 @@
 			<thead>
 				<tr>
 					<td style="width: 6%;"></td>
-					<td style="width: 30%">Transaction</td>
-					<td style="width: 22%">Amount</td>
-					<td style="width: 22%">Prize</td>
+					<td style="width: 36%">Transaction</td>
+					<td style="width: 19%">Amount</td>
+					<td style="width: 19%">Prize</td>
 					<td style="width: 15%">Date</td>
 				</tr>
 			</thead>
@@ -126,13 +126,13 @@
 						
 						var tx = "";
 						if (data['transactions'][i]['tx'])
-							tx = 'IN: <a href="<?php echo $config['blockchain-tx'] ?>' + data['transactions'][i]['tx'] + '">' + data['transactions'][i]['tx'].substring(0,20) + '...</a>';
+							tx = 'IN: <a href="<?php echo $config['blockchain-tx'] ?>' + data['transactions'][i]['tx'] + '">' + data['transactions'][i]['tx'].substring(0,18) + '...</a>';
 													
 						var out = "";
 						if (data['transactions'][i]['out']) {
 							if (data['transactions'][i]['tx']) 
 								out = "<br>";
-							out = out + 'OUT: <a href="<?php echo $config['blockchain-tx'] ?>' + data['transactions'][i]['out'] + '">' + data['transactions'][i]['out'].substring(0,20) + '...</a>';
+							out = out + 'OUT: <a href="<?php echo $config['blockchain-tx'] ?>' + data['transactions'][i]['out'] + '">' + data['transactions'][i]['out'].substring(18) + '...</a>';
 						}
 
 						$td = $('<td style="text-align: left;">' + tx + out + '</td>');
