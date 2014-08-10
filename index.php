@@ -106,10 +106,12 @@
 					for(var i in data['transactions'])
 					{
 						var state = "";
-						if (data['transactions'][i]['state'] == "1")
+						if (data['transactions'][i]['state'] == "<?php echo STATE_READY ?>")
 							state = '<span class="label label-info" id="collecting">Ready</span>';
-						else if (data['transactions'][i]['state'] == "2")
+						else if (data['transactions'][i]['state'] == "<?php echo STATE_PAID ?>")
 							state = '<span class="label label-success" id="collecting">Sent</span>';
+						else if (data['transactions'][i]['state'] == "<?php echo STATE_POT_REFILL ?>")
+							state = '<span class="label label-danger" id="collecting">Pot Refill</span>';
 						else
 							state = '<span class="label label-default" id="collecting">Waiting</span>';
 					

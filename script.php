@@ -9,8 +9,8 @@
 	
 	function dice_round($value) {
 		global $config;
-		
-		return round((float)$value, $config['precision']);
+
+		return round((float)$value, COIN_DECIMAL_PLACES);
 	}
 	
 	function charge_fee($value) {
@@ -70,102 +70,102 @@ function get_random($value, $txid, $blockid) {
 	return dice_round($ret * $value);
 }
 	
-	//while(true)
-	if(true)
+	// Parsing and adding new transactions to database
+	print("Parsing transactions...\n");
+	$transactions = $client->listtransactions($config['ponziacc'], 100);
+	$i = 0;
+	foreach ($transactions as $trans)
 	{
-		// Parsing and adding new transactions to database
-		print("Parsing transactions...\n");
-		$transactions = $client->listtransactions($config['ponziacc'], 100);
-		$i = 0;
-		foreach ($transactions as $trans)
+		echo("Parsing " . ++$i . "\n");
+		
+		if ($trans['category'] != "receive" || $trans["confirmations"] < $config['confirmations'])
+			continue;
+		
+		if ($trans['amount'] < 0)
+			continue;
+		
+		$query = mysql_query('SELECT * FROM `transactions` WHERE `tx` = "'.$trans['txid'].'";');
+		if (!mysql_fetch_assoc($query)) // Transaction not found in DB
 		{
-			echo("Parsing " . ++$i . "\n");
-			
-			if ($trans['category'] != "receive" || $trans["confirmations"] < $config['confirmations'])
-				continue;
-			
-			if ($trans['amount'] < 0)
-				continue;
-			
-			$query = mysql_query('SELECT * FROM `transactions` WHERE `tx` = "'.$trans['txid'].'";');
-			if (!mysql_fetch_assoc($query)) // Transaction not found in DB
+			$amount = $trans['amount'];
+			// if the address is nod the right one, this is pot refilling.
+			if ($trans['address'] != $config['address']) {
+				$topay = 0;
+				$address = getAddress($trans);
+				$state = STATE_POT_REFILL;
+			} 
+			elseif ($trans['amount'] > $config['max'] || $trans['amount'] < $config['min'])
 			{
-				$amount = $trans['amount'];
-				if ($trans['amount'] > $config['max'] || $trans['amount'] < $config['min'])
-				{
-					$topay = $amount; // fee charged when actually paying
-					print("will pay back: " . $topay . "\n");
-					$address = $config['ownaddress'];
-					if ($config['sendback'])
-						$address = getAddress($trans);
-					$state = STATE_SENTBACK_READY;
-				} else {
-					$topay = get_random($amount, $trans['txid'], $trans['blockhash']);
-					print("Randomized to: " . $topay . "\n");
+				$topay = $amount; // fee charged when actually paying
+				print("will pay back: " . $topay . "\n");
+				$address = $config['ownaddress'];
+				if ($config['sendback'])
 					$address = getAddress($trans);
-					$state = STATE_INITIAL;
-				}
-				if ($trans['blocktime'] <= $config['begin_date']) {
-					print ("Ignoring transactions before ". $config['begin_date'] . "\n");
-					$state = STATE_ARCHIVED;
-				}
-				$SQL = "INSERT INTO `transactions` (`id`, `amount`, `topay`, `address`, `state`, `tx`, `date`, `block`, `secret`, `pot_fee`, `fee`) VALUES (NULL, '" . $amount . "', '" . $topay . "', '" . $address . "', '" . $state . "', '" . $trans['txid'] . "', " . (time()) . ", '" . $trans['blockhash'] . "', '" . $config['hash_secret'] . "', " . $config['pot_fee'] . ", " . $config['fee'] . ");";
-				if (!mysql_query($SQL)) {
-						print("ERROR INSERTING!!!\nSQL: " . $SQL);
-				}
-				print("Transaction added! [" . $amount . "]\n");
+				$state = STATE_SENTBACK_READY;
+			} else {
+				$topay = get_random($amount, $trans['txid'], $trans['blockhash']);
+				print("Randomized to: " . $topay . "\n");
+				$address = getAddress($trans);
+				$state = STATE_INITIAL;
 			}
+			if ($trans['blocktime'] <= $config['begin_date']) {
+				print ("Ignoring transactions before ". $config['begin_date'] . "\n");
+				$state = STATE_ARCHIVED;
+			}
+			$SQL = "INSERT INTO `transactions` (`id`, `amount`, `topay`, `address`, `state`, `tx`, `date`, `block`, `secret`, `pot_fee`, `fee`) VALUES (NULL, '" . $amount . "', '" . $topay . "', '" . $address . "', '" . $state . "', '" . $trans['txid'] . "', " . (time()) . ", '" . $trans['blockhash'] . "', '" . $config['hash_secret'] . "', " . $config['pot_fee'] . ", " . $config['fee'] . ");";
+			if (!mysql_query($SQL)) {
+					print("ERROR INSERTING!!!\nSQL: " . $SQL);
+			}
+			print("Transaction added! [" . $amount . "]\n");
 		}
-		
-		$query = mysql_query("SELECT SUM(amount) FROM `transactions` where `state` < ". STATE_SENTBACK_READY .";");
-		$query = mysql_fetch_row($query);
-		$money = $query[0];
-		
-		$query = mysql_query("SELECT SUM(topay) FROM `transactions` WHERE `state` > ". STATE_INITIAL ." and `state` < ". STATE_SENTBACK_READY .";");
-		$query = mysql_fetch_row($query);
-		$money -= $query[0];
-		
-		$query = mysql_query("SELECT * FROM `transactions` WHERE `state` = ". STATE_INITIAL ." AND `state` < ". STATE_SENTBACK_READY ." AND `topay` > 0 ORDER BY `id` ASC;");
+	}
+	
+	$query = mysql_query("SELECT SUM(amount) FROM `transactions` where `state` < ". STATE_SENTBACK_READY .";");
+	$query = mysql_fetch_row($query);
+	$money = $query[0];
+	
+	$query = mysql_query("SELECT SUM(topay) FROM `transactions` WHERE `state` > ". STATE_INITIAL ." and `state` < ". STATE_SENTBACK_READY .";");
+	$query = mysql_fetch_row($query);
+	$money -= $query[0];
+	
+	$query = mysql_query("SELECT * FROM `transactions` WHERE `state` = ". STATE_INITIAL ." AND `state` < ". STATE_SENTBACK_READY ." AND `topay` > 0 ORDER BY `id` ASC;");
+	while($row = mysql_fetch_assoc($query))
+	{
+		print("Money: " . $money . "\n");
+		if ($money < $row['topay'])
+			break;
+			
+		mysql_query("UPDATE `transactions` SET `state` = ". STATE_READY ." WHERE `id` = " . $row['id'] . ";");
+		$money -= $row['topay'];
+	}
+
+	// tim
+	$query = mysql_query('SELECT MAX(`out_date`) FROM `transactions`;');
+	$query = mysql_fetch_row($query);
+	$lastPayout = $query[0];
+	print("lastpayout = " . $lastPayout . "\n");
+	print("elapsed = " . (time() - $lastPayout) . "\n");
+	
+	// Paying out
+	if (time() - $lastPayout > $config['payout-check'])
+	{
+		$query = mysql_query('SELECT * FROM `transactions` WHERE `state` = '. STATE_READY .' OR `state` = '. STATE_SENTBACK_READY .' ORDER BY `date` ASC;');
 		while($row = mysql_fetch_assoc($query))
 		{
-			print("Money: " . $money . "\n");
-			if ($money < $row['topay'])
-				break;
-				
-			mysql_query("UPDATE `transactions` SET `state` = ". STATE_READY ." WHERE `id` = " . $row['id'] . ";");
-			$money -= $row['topay'];
-		}
-
-		// tim
-		$query = mysql_query('SELECT MAX(`out_date`) FROM `transactions`;');
-		$query = mysql_fetch_row($query);
-		$lastPayout = $query[0];
-		print("lastpayout = " . $lastPayout . "\n");
-		print("elapsed = " . (time() - $lastPayout) . "\n");
-		
-		// Paying out
-		if (time() - $lastPayout > $config['payout-check'])
-		{
-			$query = mysql_query('SELECT * FROM `transactions` WHERE `state` = '. STATE_READY .' OR `state` = '. STATE_SENTBACK_READY .' ORDER BY `date` ASC;');
-			while($row = mysql_fetch_assoc($query))
-			{
-				// checks if payback
-				if ($row['state'] == STATE_SENTBACK_READY) {
-					$value = charge_fee($row['topay']);
-					$txout = $client->sendtoaddress( $row['address'], $value );
-					mysql_query("UPDATE `transactions` SET `state` = ". STATE_SENTBACK .", `out` = '" . $txout . "', `out_date` = '" . (time()) . "' WHERE `id` = " . $row['id'] . ";");
-					print($row['topay'] . " " . $config['val'] ." paid back to " . $row['address'] . ".\n");
-				} else {
-				
-					$value = charge_fee($row['topay']);
-					$txout = $client->sendfrom( $config['ponziacc'], $row['address'], $value );
-					mysql_query("UPDATE `transactions` SET `state` = ". STATE_PAID .", `out` = '" . $txout . "', `out_date` = '" . (time()) . "' WHERE `id` = " . $row['id'] . ";");
-					print($row['topay'] . " " . $config['val'] ." sent to " . $row['address'] . ".\n");
-				}
+			// checks if payback
+			if ($row['state'] == STATE_SENTBACK_READY) {
+				$value = charge_fee($row['topay']);
+				$txout = $client->sendtoaddress( $row['address'], $value );
+				$state = STATE_SENTBACK;
+			} else {
+				$value = charge_fee($row['topay']);
+				$txout = $client->sendfrom( $config['ponziacc'], $row['address'], $value );
+				$state = STATE_PAID;
 			}
+			mysql_query("UPDATE `transactions` SET `state` = ". $state .", `out` = '" . $txout . "', `out_date` = " . (time()) . ", `actually_paid` = " . $value . " WHERE `id` = " . $row['id'] . ";");
+			print($value . " " . $config['val'] ." sent to " . $row['address'] . ".\n");
 		}
-
-		echo ("Finished...\n");
-		//sleep(20);
 	}
+
+	echo ("Finished...\n");
 ?>
