@@ -11,7 +11,7 @@
 		include('config.php');
 		include('constants.php');
 		
-		$value = $argv[1];
+		$topay = $argv[1];
 		
 		$amount = 0;
 		$address = $config['ownaddress'];
