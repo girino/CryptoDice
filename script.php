@@ -54,8 +54,10 @@ function get_random($value, $txid, $blockid) {
 
 	// get two first bytes
 	$hash = hash_hmac('sha256', strtolower($txid), strtolower($blockid));
-	$hash = hash_hmac('sha256', $hash, $config['hash_secret']); // double hash
-	$hash = hash_hmac('sha256', $hash, $config['hash_secret']); // double hash
+	$hash = hash_hmac('sha256', $hash, strtolower($blockid)); // double hash
+	// not using the secret makes it more auditable.
+// 	$hash = hash_hmac('sha256', $hash, $config['hash_secret']); 
+// 	$hash = hash_hmac('sha256', $hash, $config['hash_secret']);
 	$hex = substr($hash, 32, 4); // not sure if initial zeros are pruned
 	$dec = hexdec ( $hex );
 	// homogeneous in [0, 2) interval
