@@ -127,8 +127,8 @@ function get_random($value, $txid, $blockid) {
 	$query = mysql_query("SELECT SUM(topay) FROM `transactions` WHERE `state` > ". STATE_INITIAL ." and `state` < ". STATE_SENTBACK_READY .";");
 	$query = mysql_fetch_row($query);
 	$money -= $query[0];
-	
-	$query = mysql_query("SELECT * FROM `transactions` WHERE `state` = ". STATE_INITIAL ." AND `state` < ". STATE_SENTBACK_READY ." AND `topay` > 0 ORDER BY `id` ASC;");
+
+	$query = mysql_query("SELECT * FROM `transactions` WHERE `state` = ". STATE_INITIAL ." AND `topay` > 0 ORDER BY `id` ASC;");
 	while($row = mysql_fetch_assoc($query))
 	{
 		print("Money: " . $money . "\n");
@@ -139,6 +139,18 @@ function get_random($value, $txid, $blockid) {
 		$money -= $row['topay'];
 	}
 
+	// cash outs come last
+	$query = mysql_query("SELECT * FROM `transactions` WHERE `state` = ". STATE_CASH_OUT_INITIAL ." AND `topay` > 0 ORDER BY `id` ASC;");
+	while($row = mysql_fetch_assoc($query))
+	{
+		print("Money: " . $money . "\n");
+		if ($money < $row['topay'])
+			break;
+			
+		mysql_query("UPDATE `transactions` SET `state` = ". STATE_CASH_OUT_READY ." WHERE `id` = " . $row['id'] . ";");
+		$money -= $row['topay'];
+	}
+	
 	// tim
 	$query = mysql_query('SELECT MAX(`out_date`) FROM `transactions`;');
 	$query = mysql_fetch_row($query);
