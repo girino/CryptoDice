@@ -149,7 +149,7 @@ function get_random($value, $txid, $blockid) {
 	// Paying out
 	if (time() - $lastPayout > $config['payout-check'])
 	{
-		$query = mysql_query('SELECT * FROM `transactions` WHERE `state` = in ('. STATE_READY .', '. STATE_SENTBACK_READY .', ' . STATE_CASH_OUT_READY . ') ORDER BY `date` ASC;');
+		$query = mysql_query('SELECT * FROM `transactions` WHERE `state` in ('. STATE_READY .', '. STATE_SENTBACK_READY .', ' . STATE_CASH_OUT_READY . ') ORDER BY `date` ASC;');
 		while($row = mysql_fetch_assoc($query))
 		{
 			// checks if payback
