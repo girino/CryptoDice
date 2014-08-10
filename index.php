@@ -124,11 +124,18 @@
 						$td = $('<td>' + state + '</td>');
 						$($tr).append($td);
 						
+						var tx = "";
+						if (data['transactions'][i]['tx'])
+							tx = 'IN: <a href="<?php echo $config['blockchain-tx'] ?>' + data['transactions'][i]['tx'] + '">' + data['transactions'][i]['tx'].substring(0,26) + '...</a>';
+													
 						var out = "";
-						if (data['transactions'][i]['out'])
-							out = '<br>OUT: <a href="<?php echo $config['blockchain-tx'] ?>' + data['transactions'][i]['out'] + '">' + data['transactions'][i]['out'].substring(0,25) + '...</a>';
-						
-						$td = $('<td style="text-align: left;">IN: <a href="<?php echo $config['blockchain-tx'] ?>' + data['transactions'][i]['tx'] + '">' + data['transactions'][i]['tx'].substring(0,26) + '...</a>' + out + '</td>');
+						if (data['transactions'][i]['out']) {
+							if (data['transactions'][i]['tx']) 
+								out = "<br>";
+							out = out + 'OUT: <a href="<?php echo $config['blockchain-tx'] ?>' + data['transactions'][i]['out'] + '">' + data['transactions'][i]['out'].substring(0,25) + '...</a>';
+						}
+
+						$td = $('<td style="text-align: left;">' + tx + out + '</td>');
 						$($tr).append($td);
 						
 						$td = $('<td>' + parseFloat(data['transactions'][i]['amount']).toFixed(<?php echo $config['precision'] ?>) + ' <?php echo $config['val'] ?></td>');
