@@ -1,4 +1,4 @@
-CryptoPonzi
+CryptoDice
 ===========
 Installation guide:
 
@@ -11,7 +11,7 @@ txindex = 1
 4. Fill in the **config.php** file
 5. Run **setup.php** script to add your address to the daemon
 6. Add **transactions.sql** schema to your database
-7. Run **script.php** script from CLI, it should be running in background
+7. add **php script.php** to cron. The faster the better.
 8. Install php5-json for the transactions to display properly
 9. ???
 10. Profit!
