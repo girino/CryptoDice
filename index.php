@@ -126,13 +126,13 @@
 						
 						var tx = "";
 						if (data['transactions'][i]['tx'])
-							tx = 'IN: <a href="<?php echo $config['blockchain-tx'] ?>' + data['transactions'][i]['tx'] + '">' + data['transactions'][i]['tx'].substring(0,26) + '...</a>';
+							tx = 'IN: <a href="<?php echo $config['blockchain-tx'] ?>' + data['transactions'][i]['tx'] + '">' + data['transactions'][i]['tx'].substring(0,20) + '...</a>';
 													
 						var out = "";
 						if (data['transactions'][i]['out']) {
 							if (data['transactions'][i]['tx']) 
 								out = "<br>";
-							out = out + 'OUT: <a href="<?php echo $config['blockchain-tx'] ?>' + data['transactions'][i]['out'] + '">' + data['transactions'][i]['out'].substring(0,25) + '...</a>';
+							out = out + 'OUT: <a href="<?php echo $config['blockchain-tx'] ?>' + data['transactions'][i]['out'] + '">' + data['transactions'][i]['out'].substring(0,20) + '...</a>';
 						}
 
 						$td = $('<td style="text-align: left;">' + tx + out + '</td>');
