@@ -66,10 +66,10 @@ if ($version == 1) {
 	print("updating from version 1 to 2...\n");
 	// creates version table;
 	print("Creating version table...\n");
-	$sql = "CREATE TABLE `version` ( " +
-  			  "`id` int(11) NOT NULL DEFAULT '0', " +
-  			  "`version` int(11) NOT NULL DEFAULT '0', " +
-  			  "PRIMARY KEY (`id`) " +
+	$sql = "CREATE TABLE `version` ( " .
+  			  "`id` int(11) NOT NULL DEFAULT '0', " .
+  			  "`version` int(11) NOT NULL DEFAULT '0', " .
+  			  "PRIMARY KEY (`id`) " .
 			") ENGINE=InnoDB  DEFAULT CHARSET=latin1 ;";
 	if(!mysql_query($sql)) {
 		die("ERROR creating version table: " . $sql . "\n");
@@ -78,13 +78,13 @@ if ($version == 1) {
 	
 	// updates transaction table
 	print("Altering transactions table...\n");
-	$sql = "ALTER TABLE `transactions` ADD COLUMN ( " +
-		   "`out_date` int(11) NOT NULL DEFAULT '0', " +
-		   "  `block` varchar(255) NOT NULL DEFAULT '', " +
-		   "  `secret` varchar(255) NOT NULL DEFAULT '', " +
-		   "  `pot_fee` decimal(15,8) NOT NULL DEFAULT '0', " +
-		   "  `fee` decimal(15,8) NOT NULL DEFAULT '0', " +
-		   "  `actually_paid` decimal(15,8) NOT NULL DEFAULT '0', " +
+	$sql = "ALTER TABLE `transactions` ADD COLUMN ( " .
+		   "`out_date` int(11) NOT NULL DEFAULT '0', " .
+		   "  `block` varchar(255) NOT NULL DEFAULT '', " .
+		   "  `secret` varchar(255) NOT NULL DEFAULT '', " .
+		   "  `pot_fee` decimal(15,8) NOT NULL DEFAULT '0', " .
+		   "  `fee` decimal(15,8) NOT NULL DEFAULT '0', " .
+		   "  `actually_paid` decimal(15,8) NOT NULL DEFAULT '0', " .
 		   "  `version` int(11) NOT NULL DEFAULT '0' );";
 	if (!mysql_query($sql)) {
 		die("ERROR adding columns to transactions table: " . $sql . "\n");
