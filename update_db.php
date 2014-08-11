@@ -38,16 +38,16 @@ if ($version == 0) {
 	
 	// creates all tables
 	$sql = "CREATE TABLE `transactions` (
-`id` int(11) NOT NULL AUTO_INCREMENT,
-`amount` decimal(15,8) NOT NULL,
-`topay` decimal(15,8) NOT NULL,
-`address` varchar(64) NOT NULL,
-`state` int(11) NOT NULL DEFAULT '0',
-`tx` varchar(255) NOT NULL,
-`out` varchar(255) NOT NULL,
-`date` int(11) NOT NULL DEFAULT '0',
-PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=36 ;";
+              `id` int(11) NOT NULL AUTO_INCREMENT,
+              `amount` decimal(15,8) NOT NULL,
+              `topay` decimal(15,8) NOT NULL,
+              `address` varchar(64) NOT NULL,
+              `state` int(11) NOT NULL DEFAULT '0',
+              `tx` varchar(255) NOT NULL,
+              `out` varchar(255) NOT NULL,
+              `date` int(11) NOT NULL DEFAULT '0',
+              PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=36 ;";
 	if(!mysql_query($sql)) {
 		die("ERROR creating transaction table: " . $sql . "\n");
 	}
