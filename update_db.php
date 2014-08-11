@@ -88,6 +88,7 @@ if ($version == 1) {
 		   "  `version` int(11) NOT NULL DEFAULT '0' );";
 	$val = mysql_query($sql);
 	if (!$val) {
+		print("val = " . $val . "\n");
 		die("ERROR adding columns to transactions table: " . $sql . "\n");
 	}
 	print("Done.\n");
