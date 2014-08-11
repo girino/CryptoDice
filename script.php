@@ -1,6 +1,6 @@
 <?php
-	include('config.php');
-	include('constants.php');
+	require_once 'config.php';
+	require_once 'constants.php';
 	require_once 'jsonRPCClient.php';
 	require_once 'calculation_utils.php';
 	$client = new jsonRPCClient('http://' . $rpc['login'] . ':' . $rpc['password'] . '@' . $rpc['ip'] . ':' . $rpc['port'] . '/') or die('Error: could not connect to RPC server.');
