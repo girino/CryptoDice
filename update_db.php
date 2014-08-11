@@ -116,8 +116,8 @@ if ($version == 1) {
 	print("Done.\n");
 	
 	// update version info
-	print("Updating version table...\n");
-	$sql = "UPDATE `version` SET `version` = 2 where `id` = 0;";
+	print("Insert into version table...\n");
+	$sql = "insert into `version` (`id`,  `version`) values (0 , 2);";
 	if (!mysql_query($sql)) {
 		die("ERROR updating version table: " . $sql . "\n");
 	}
