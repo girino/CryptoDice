@@ -6,15 +6,16 @@ Installation guide:
 ```
 txindex = 1
 ```
-2. Run your daemon with _-reindex_ and _-server_ arguments
-3. Generate your address and private key using vanitygen
-4. Fill in the **config.php** file
-5. Run **setup.php** script to add your address to the daemon
-6. Add **transactions.sql** schema to your database
-7. add **php script.php** to cron. The faster the better.
-8. Install php5-json for the transactions to display properly
-9. ???
-10. Profit!
+2. Run your daemon with _-reindex_ and _-server_ arguments.
+3. Generate your address and private key using vanitygen.
+4. Create your database on mysql.
+5. Fill in the **config.php** file.
+6. Run **setup.php** script to add your address to the daemon.
+7. Run **update_db.php** to create or update your database schema.
+8. add **php script.php** to cron. The faster the better.
+9. Install php5-json for the transactions to display properly
+10. ???
+11. Profit!
 
 Useful links
 ===========
