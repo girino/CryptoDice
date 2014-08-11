@@ -31,8 +31,18 @@
 		} elseif ($row['version'] == 2) {
 			print ("auditing version 2 algorithm\n");
 			// gets original transaction and checks if it is ok
-			$coind_transaction = $client->gettransaction($row['tx']);
-			print_r($coind_transaction);
+			$coind_failed = FALSE;
+			$coind_transaction = NULL;
+			try {
+				$coind_transaction = $client->gettransaction($row['tx']);
+			} catch (Exception $e) {
+				$coind_failed = TRUE;
+			}
+			if ($coind_failed || $coind_transaction['details'][0]['category'] != 'receive') {
+				$result = 'NO_RECEIVE_TX';
+			} elseif ($coind_transaction['details'][0]['amount'] != $row['amount'])
+				$result = 'AMOUNT_DOES_NOT_MATCH_TX';
+			}
 		} else {
 			print ("unknown algorithm version, unable to audit\n");
 			$result= 'ALG_UNKNOWN';

@@ -21,6 +21,8 @@ define('CURRENT_VERSION', 2);
 $audit_errors = array(
 	'SUCCESS' => "Success",
 	'ALG_UNKNOWN' => "Unknown Algorithm", 
+	'NO_RECEIVE_TX' => "Transaction not found or is not of 'receive' type.", 
+	'AMOUNT_DOES_NOT_MATCH_TX' => "Amount recorded in the database does match the amount reported by coind.",
 );
 
 ?>
