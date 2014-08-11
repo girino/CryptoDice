@@ -79,14 +79,15 @@ if ($version == 1) {
 	// updates transaction table
 	print("Altering transactions table...\n");
 	$sql = "ALTER TABLE `transactions` ADD COLUMN ( " .
-		   "`out_date` int(11) NOT NULL DEFAULT '0', " .
+		   "  `out_date` int(11) NOT NULL DEFAULT '0', " .
 		   "  `block` varchar(255) NOT NULL DEFAULT '', " .
 		   "  `secret` varchar(255) NOT NULL DEFAULT '', " .
 		   "  `pot_fee` decimal(15,8) NOT NULL DEFAULT '0', " .
 		   "  `fee` decimal(15,8) NOT NULL DEFAULT '0', " .
 		   "  `actually_paid` decimal(15,8) NOT NULL DEFAULT '0', " .
 		   "  `version` int(11) NOT NULL DEFAULT '0' );";
-	if (!mysql_query($sql)) {
+	$val = mysql_query($sql);
+	if (!$val) {
 		die("ERROR adding columns to transactions table: " . $sql . "\n");
 	}
 	print("Done.\n");
