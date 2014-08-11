@@ -24,19 +24,19 @@
 	{
 		
 		$result = 'SUCCESS';
-		print ("Transaction: " . $row['tx']);
+		print ("Transaction: " . $row['tx'] . "\n");
 		//print_r($row);
 		if ($row['version'] == 1) {
-			print ("auditing version 1 algorithm");
+			print ("auditing version 1 algorithm\n");
 		} elseif ($row['version'] == 2) {
-			print ("auditing version 1 algorithm");
+			print ("auditing version 1 algorithm\n");
 		} else {
-			print ("unknown algorithm version, unable to audit");
+			print ("unknown algorithm version, unable to audit\n");
 			$result= 'ALG_UNKNOWN';
 		}
 		
 		if ($result != 'SUCCESS') {
-			print ("ERROR: " . $row['tx'] . ": " . $audit_errors[$result]);
+			print ("ERROR: " . $row['tx'] . ": " . $audit_errors[$result]. "\n");
 		}
 	}
 	print("Finished...\n");
