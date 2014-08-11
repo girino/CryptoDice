@@ -18,11 +18,26 @@
 	
 	// Audits transactions and generates report
 	print("Auditing transactions...\n");
+	
 	$query = mysql_query('SELECT * FROM `transactions` ORDER BY `id` DESC');
 	while($row = mysql_fetch_assoc($query))
 	{
+		
+		$result = 'SUCCESS';
 		print ("Transaction: " . $row['tx']);
-		print_r($row);
+		//print_r($row);
+		if ($row['version'] == 1) {
+			print ("auditing version 1 algorithm");
+		} elseif ($row['version'] == 2) {
+			print ("auditing version 1 algorithm");
+		} else {
+			print ("unknown algorithm version, unable to audit");
+			$result= 'ALG_UNKNOWN';
+		}
+		
+		if ($result != 'SUCCESS') {
+			print ("ERROR: " . $row['tx'] . ": " . $audit_errors[$result]);
+		}
 	}
 	print("Finished...\n");
 ?>

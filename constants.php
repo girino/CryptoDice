@@ -17,4 +17,10 @@ define('ALGO_VERSION', 2);
 
 define('CURRENT_VERSION', 2);
 
+// audit error codes
+$audit_errors = array(
+	'SUCCESS' => "Success",
+	'ALG_UNKNOWN' => "Unknown Algorithm", 
+);
+
 ?>
