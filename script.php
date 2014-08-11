@@ -2,6 +2,7 @@
 	include('config.php');
 	include('constants.php');
 	require_once 'jsonRPCClient.php';
+	require_once 'calculation_utils.php';
 	$client = new jsonRPCClient('http://' . $rpc['login'] . ':' . $rpc['password'] . '@' . $rpc['ip'] . ':' . $rpc['port'] . '/') or die('Error: could not connect to RPC server.');
 
 	$dbversion = 0;
@@ -16,18 +17,6 @@
 	}
 	
 	$adresses = array();
-	
-	function dice_round($value) {
-		global $config;
-
-		return round((float)$value, COIN_DECIMAL_PLACES);
-	}
-	
-	function charge_fee($value) {
-		global $config;
-		
-		return dice_round($value * (1 - $config['fee']));
-	}
 
 	function getAddress($trans)
 	{
@@ -55,31 +44,6 @@
 		return $address;
 	}
 
-function get_random($value, $txid, $blockid) {
-	global $config;
-	
-	if (is_null($txid)) {
-		return 0;
-	}
-
-	// get two first bytes
-	$hash = hash_hmac('sha256', hex2bin($txid), hex2bin($blockid));
-	// not using the secret makes it more auditable.
-// 	$hash = hash_hmac('sha256', $hash, $config['hash_secret']);
-	$hex = substr($hash, 32, 4); // not sure if initial zeros are pruned
-	$dec = hexdec ( $hex );
-	// homogeneous in [0, 2) interval
-	$ret = $dec / 0x8000;
-	
-	// pot fee removal
-	if ($config['pot_fee'] > 0 && $ret > 1) {
-		$ret = 1 + (($ret - 1) * (1.0 - $config['pot_fee'])); // charges only the winnings
-	}
-	print("hex = " . $hex . ", dec = " . $dec . ", ret = " . $ret . "\n");
-	
-	return dice_round($ret * $value);
-}
-	
 	// Parsing and adding new transactions to database
 	print("Parsing transactions...\n");
 	$transactions = $client->listtransactions($config['ponziacc'], 100);
