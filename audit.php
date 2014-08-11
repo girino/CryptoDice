@@ -40,7 +40,7 @@
 			}
 			if ($coind_failed || $coind_transaction['details'][0]['category'] != 'receive') {
 				$result = 'NO_RECEIVE_TX';
-			} elseif ($coind_transaction['details'][0]['amount'] != $row['amount'])
+			} elseif ($coind_transaction['details'][0]['amount'] != $row['amount']) {
 				$result = 'AMOUNT_DOES_NOT_MATCH_TX';
 			}
 		} else {
