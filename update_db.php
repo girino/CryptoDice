@@ -103,6 +103,16 @@ if ($version == 1) {
 	if (!mysql_query($sql)) {
 		die("ERROR updating transactions table: " . $sql . "\n");
 	}
+	// now, this is tricky.. i cant figure out the right params that were used, so i guess 
+	// the guy never changed his current setings and use them. This should never occur since
+	// i'm the only one using the software now.
+	$sql = "UPDATE `transactions` SET `secret`        = '" . $config['hash_secret'] . "', 
+									  `pot_fee`       = "  . $config['pot_fee'] . ",
+									  `fee`           = "  . $config['fee'] . ",
+									  `actually_paid` =	`topay` * (1.0 - " . $config['fee'] . ");";
+	if (!mysql_query($sql)) {
+		die("ERROR updating transactions table: " . $sql . "\n");
+	}
 	print("Done.\n");
 	
 	// update version info

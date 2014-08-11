@@ -15,4 +15,6 @@ define('COIN_DECIMAL_PLACES', 8);
 
 define('ALGO_VERSION', 2);
 
+define('CURRENT_VERSION', 2);
+
 ?>

@@ -1,8 +1,25 @@
 <?php include('header.php'); ?>
 <?php include('constants.php'); ?>
+<?php 
+$dbversion = 0;
+// first checks if the version table exists
+if(mysql_query('select 1 from `version`;') !== FALSE) {
+	$query = mysql_query('select max(`version`) from `version`;');
+	$row = mysql_fetch_row($query);
+	$dbversion = (int)$row[0];
+}
+if ($dbversion != CURRENT_VERSION) {
+	$show_version_msg = TRUE;
+}
+?>
 <div class="jumbotron" style="text-align: center;">
   <h1><?php echo $config['full-name'] ?></h1>
   <p>Send <?php echo $config['val'] ?>. Get up to <strong><?php echo(200 * (1 - $config['pot_fee'])) ?>%</strong> back when it confirms.</p>
+
+  <?php if($show_version_msg): ?>
+  <span class="label label-warning" id="wrongversion"><strong>Attention:</strong> The database version does not match the code version. Please run "php update_db.php".</span>
+  <?php endif; ?>
+	
   <div id="address-wrapper" style="overflow: hidden;">
 		<a href="<?php echo($config['blockchain-addr'] . $config['address']) ?>">
 			<strong><?php echo $config['address'] ?></strong>
