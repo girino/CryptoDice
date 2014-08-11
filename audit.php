@@ -29,7 +29,10 @@
 		if ($row['version'] == 1) {
 			print ("auditing version 1 algorithm\n");
 		} elseif ($row['version'] == 2) {
-			print ("auditing version 1 algorithm\n");
+			print ("auditing version 2 algorithm\n");
+			// gets original transaction and checks if it is ok
+			$coind_transaction = $client->gettransaction($row['tx']);
+			print_r($coind_transaction);
 		} else {
 			print ("unknown algorithm version, unable to audit\n");
 			$result= 'ALG_UNKNOWN';
