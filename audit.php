@@ -77,7 +77,7 @@
 			// gets original transaction and checks if it is ok
 			$result = validate_tx($row['tx'], $row['amount'], 'receive');
 			if ($result == 'SUCCESS')
-				$result = validate_tx($row['out'], $row['actually_paid'], 'send');
+				$result = validate_tx($row['out'], - $row['actually_paid'], 'send');
 			// validate get_random
 			if ($result == 'SUCCESS') {
 				if ($row['version'] == 2) {
