@@ -17,7 +17,7 @@
 	}
 	
 	function validate_fee($topay, $actually_paid, $fee) {
-		if ($actually_paid != charge_fee_internal($value, $fee)) {
+		if ($actually_paid != charge_fee_internal($topay, $fee)) {
 			return 'WRONG_FEE';
 		}
 		return 'SUCCESS';
