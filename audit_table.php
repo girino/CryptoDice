@@ -12,7 +12,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-	<div style="background: white; margin-bottom: 40px;">
+	<div style="background: white; margin-bottom: 40px; width: 100%;">
 		<div id="header">
 			<?php echo($config['name'] . ' - ' . $config['title']) ?>
 		</div>
