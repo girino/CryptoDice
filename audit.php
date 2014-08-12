@@ -13,7 +13,8 @@
 		$dbversion = (int)$row[0];
 	}
 	if ($dbversion != CURRENT_VERSION) {
-		die("Wrong DB version, please run 'php update_db.php'.\n");
+		php_sapi_name() === 'cli' || die("Wrong DB version, please run 'php update_db.php'.\n");
+		$show_version_msg = TRUE;
 	}
 	
 	function validate_fee($topay, $actually_paid, $fee, $state) {
@@ -79,6 +80,34 @@
 		return 'SUCCESS';
 	}
 	
+	function audit_single_row($row) {
+		$result = 'SUCCESS';
+		print ("Transaction: " . $row['tx'] . "\n");
+		//print_r($row);
+		if ($row['version'] == 1) {
+			print ("auditing version 1 algorithm\n");
+			$result = 'NOT_SUPPORTED';
+		} elseif ($row['version'] == 2) {
+			print ("auditing version 2 algorithm\n");
+			// gets original transaction and checks if it is ok
+			$result = validate_tx($row['tx'], $row['amount'], 'receive', $row['state']);
+			// validate get_random
+			if ($result == 'SUCCESS') {
+				$result = validate_v2($row['tx'], $row['block'], $row['amount'], $row['topay'], $row['pot_fee'], $row['secret'], $row['state']);
+			}
+			if ($result == 'SUCCESS')
+				$result = validate_tx($row['out'], - $row['actually_paid'], 'send', $row['state']);
+			// validate fee charging
+			if ($result == 'SUCCESS') {
+				$result = validate_fee($row['topay'], $row['actually_paid'], $row['fee'], $row['state']);
+			}
+		} else {
+			print ("unknown algorithm version, unable to audit\n");
+			$result= 'ALG_UNKNOWN';
+		}
+		return $result;
+	}
+	
 	
 	function audit() {
 		// Audits transactions and generates report
@@ -88,31 +117,7 @@
 		while($row = mysql_fetch_assoc($query))
 		{
 			
-			$result = 'SUCCESS';
-			print ("Transaction: " . $row['tx'] . "\n");
-			//print_r($row);
-			if ($row['version'] == 1) {
-				print ("auditing version 1 algorithm\n");
-				$result = 'NOT_SUPPORTED';
-			} elseif ($row['version'] == 2) {
-				print ("auditing version 2 algorithm\n");
-				// gets original transaction and checks if it is ok
-				$result = validate_tx($row['tx'], $row['amount'], 'receive', $row['state']);
-				// validate get_random
-				if ($result == 'SUCCESS') {
-					$result = validate_v2($row['tx'], $row['block'], $row['amount'], $row['topay'], $row['pot_fee'], $row['secret'], $row['state']);
-				}
-				if ($result == 'SUCCESS')
-					$result = validate_tx($row['out'], - $row['actually_paid'], 'send', $row['state']);
-				// validate fee charging
-				if ($result == 'SUCCESS') {
-					$result = validate_fee($row['topay'], $row['actually_paid'], $row['fee'], $row['state']);
-				}
-			} else {
-				print ("unknown algorithm version, unable to audit\n");
-				$result= 'ALG_UNKNOWN';
-			}
-			
+			$result = audit_single_row($row);			
 			if ($result != 'SUCCESS') {
 				print ("ERROR: " . $row['tx'] . ": " . $audit_errors[$result]. "\n");
 				// debug info
