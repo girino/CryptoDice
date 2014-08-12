@@ -42,6 +42,8 @@
 	}
 	
 	function validate_tx($txid, $value, $category) {
+		global $client;
+		
 		$coind_failed = FALSE;
 		$coind_transaction = NULL;
 		try {
