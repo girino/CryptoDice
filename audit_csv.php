@@ -2,8 +2,13 @@
 <?php require_once 'constants.php'; ?>
 <?php require_once 'calculation_utils.php'; ?>
 <?php require_once 'audit.php'; ?>
-<!DOCTYPE html>
 <?php 
+header('Content-Type: text/csv; charset=utf-8');
+header('Content-Disposition: attachment; filename=data.csv');
+
+// create a file pointer connected to the output stream
+$output = fopen('php://output', 'w');
+
 $dbversion = 0;
 // first checks if the version table exists
 if(mysql_query('select 1 from `version`;') !== FALSE) {
@@ -12,22 +17,15 @@ if(mysql_query('select 1 from `version`;') !== FALSE) {
 	$dbversion = (int)$row[0];
 }
 if ($dbversion != CURRENT_VERSION) {
-	$show_version_msg = TRUE;
+	die( "Wrong DB version\n");
 }
+
 $query = mysql_query('SELECT * FROM `transactions` LIMIT 1;');
 $row = mysql_fetch_assoc($query);
-//$keys = array('tx','block','out','address','amount','topay','actually_paid','date','out_date','state','secret','pot_fee','fee','version');
-$keys = array_keys($row);
-foreach ($keys as $key) {
-	echo $key . ",";
-}
-echo "\n";
-$query = mysql_query('SELECT * FROM `transactions` ORDER BY id DESC, state DESC LIMIT 20;');
-while($row = mysql_fetch_assoc($query))
-{
-	foreach ($keys as $key) {
-		echo $row[$key] . ",";
-	}
-	echo "\n";
-}
+// output the column headings
+fputcsv($output, array_keys($row));
+
+$query = mysql_query('SELECT * FROM `transactions` ORDER BY id DESC, state DESC');
+while($row = mysql_fetch_assoc($query)) 
+	fputcsv($output, $row);
 ?>
