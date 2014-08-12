@@ -39,7 +39,7 @@
 		if ($pot_fee > 0 && $ret > 1) {
 			$ret = 1 + (($ret - 1) * (1.0 - $pot_fee)); // charges only the winnings
 		}
-		print("hex = " . $hex . ", dec = " . $dec . ", ret = " . $ret . "\n");
+		//print("hex = " . $hex . ", dec = " . $dec . ", ret = " . $ret . "\n");
 		
 		return dice_round($ret * $value);
 	}

@@ -82,13 +82,10 @@
 	
 	function audit_single_row($row) {
 		$result = 'SUCCESS';
-		print ("Transaction: " . $row['tx'] . "\n");
 		//print_r($row);
 		if ($row['version'] == 1) {
-			print ("auditing version 1 algorithm\n");
 			$result = 'NOT_SUPPORTED';
 		} elseif ($row['version'] == 2) {
-			print ("auditing version 2 algorithm\n");
 			// gets original transaction and checks if it is ok
 			$result = validate_tx($row['tx'], $row['amount'], 'receive', $row['state']);
 			// validate get_random
@@ -102,7 +99,6 @@
 				$result = validate_fee($row['topay'], $row['actually_paid'], $row['fee'], $row['state']);
 			}
 		} else {
-			print ("unknown algorithm version, unable to audit\n");
 			$result= 'ALG_UNKNOWN';
 		}
 		return $result;
