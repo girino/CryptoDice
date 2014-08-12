@@ -97,6 +97,8 @@
 		
 		if ($result != 'SUCCESS') {
 			print ("ERROR: " . $row['tx'] . ": " . $audit_errors[$result]. "\n");
+			// debug info
+			print_r($row);
 		}
 	}
 	print("Finished...\n");
