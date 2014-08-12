@@ -1,5 +1,4 @@
 <?php	include('config.php'); ?>
-<?php include('header.php'); ?>
 <?php include('constants.php'); ?>
 <!DOCTYPE html>
 <html>
