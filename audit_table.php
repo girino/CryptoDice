@@ -37,7 +37,7 @@ if ($dbversion != CURRENT_VERSION) {
 ?>
 <div class="jumbotron" style="text-align: center;">
   <h1><?php echo $config['full-name'] ?></h1>
-  <p>Audit all past transactions.</p>
+  <p>Export all past transactions as table.</p>
 
   <?php if($show_version_msg): ?>
   <span class="label label-warning" id="wrongversion"><strong>Attention:</strong> The database version does not match the code version. Please run "php update_db.php".</span>
@@ -47,6 +47,7 @@ if ($dbversion != CURRENT_VERSION) {
 
 <div class="jumbotron" style="text-align: center; padding: 20px; overflow: auto !important;">	
 	<h2>Last transactions</h2>
+	<h6 style="text-align: center; color: rgb(200,200,200)">Last 20 transactions, for a full table, please <a href="audit_csv.php">export the CSV file</a>.</h6>
 	<div class="table-responsive">
 		<table class="table table-hover table-striped">
 			<thead>
