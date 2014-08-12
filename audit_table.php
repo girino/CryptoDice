@@ -1,5 +1,7 @@
-<?php	include('config.php'); ?>
-<?php include('constants.php'); ?>
+<?php require_once 'config.php'; ?>
+<?php require_once 'constants.php'; ?>
+<?php require_once 'calculation_utils.php'; ?>
+<?php require_once 'audit.php'; ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,9 +52,10 @@ if ($dbversion != CURRENT_VERSION) {
 			<thead>
 				<tr>
 <?php 
-$query = mysql_query('SELECT * FROM `transactions` LIMIT 1;');
-$row = mysql_fetch_assoc($query);
-$keys = array_keys($row);
+//$query = mysql_query('SELECT * FROM `transactions` LIMIT 1;');
+//$row = mysql_fetch_assoc($query);
+$keys = array('tx','block','out','address','amount','topay','actually_paid','date','out_date','state','secret','pot_fee','fee','version');
+//$keys = array_keys($row);
 foreach ($keys as $key) {
 	echo "<td >" . $key . "</td>";
 }
@@ -64,8 +67,10 @@ foreach ($keys as $key) {
 $query = mysql_query('SELECT * FROM `transactions` ORDER BY id DESC, state DESC LIMIT 20;');
 while($row = mysql_fetch_assoc($query))
 {
-	//$audit = audit_single_row($row);
+	$audit = audit_single_row($row);
 	echo "<tr>";
+	echo '<td><span class="label label-' . (($audit == 'SUCCESS')?'info':'warning') . 
+			'" id="collecting">' . $row[$key] . '</span></td>';
 	foreach ($keys as $key) {
 		echo "<td >" . $row[$key] . "</td>";
 	}
