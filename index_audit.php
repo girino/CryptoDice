@@ -24,6 +24,7 @@ if ($dbversion != CURRENT_VERSION) {
 
 <div class="jumbotron" style="text-align: center; padding: 20px;">	
 	<h2>Last transactions</h2>
+	<h6 style="text-align: center; color: rgb(200,200,200)">See (<a href="audit_table.php">html</a>) or export (<a href="audit_csv.php">csv</a>) the raw data for external audit.</h6>
 	<div class="table-responsive">
 		<table class="table table-hover table-striped">
 			<thead>

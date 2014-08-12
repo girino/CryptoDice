@@ -21,6 +21,7 @@
 		<ul class="nav nav-tabs" style="margin-left: 4px; width: 99%;">
 			<li id="header-play"><a href="index.php">Play!</a></li>
 			<li id="header-audit"><a href="index_audit.php">Audit</a></li>
+			<li id="header-table" class="active"><a href="audit_table.php">Raw Audit data</a></li>
 			<li><a href="<?php echo($config['blockchain-addr'] . $config['address']) ?>">Transactions</a></li>
 		</ul>
 <?php 
