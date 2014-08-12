@@ -41,7 +41,7 @@
 		return 'SUCCESS';
 	}
 	
-	function validate_tx($txid, $value, $category) {
+	function validate_tx($txid, $amount, $category) {
 		global $client;
 		
 		$coind_failed = FALSE;
