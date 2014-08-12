@@ -46,7 +46,7 @@ if ($dbversion != CURRENT_VERSION) {
 <div class="jumbotron" style="text-align: center; padding: 20px;">	
 	<h2>Last transactions</h2>
 	<div class="table-responsive">
-		<table class="table table-hover table-striped">
+		<table class="table table-hover table-striped" style="overflow: scroll;">
 			<thead>
 				<tr>
 <?php 
