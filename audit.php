@@ -16,34 +16,74 @@
 		die("Wrong DB version, please run 'php update_db.php'.\n");
 	}
 	
-	function validate_fee($topay, $actually_paid, $fee) {
-		if ($actually_paid != charge_fee_internal($topay, $fee)) {
-			return 'WRONG_FEE';
+	function validate_fee($topay, $actually_paid, $fee, $state) {
+		if (in_array($state, array(STATE_SENTBACK, STATE_PAID))) {
+			if ($actually_paid != charge_fee_internal($topay, $fee)) {
+				return 'WRONG_FEE';
+			}
 		}
 		return 'SUCCESS';
 	}
 	
-	function validate_v2($txid, $blockid, $amount, $topay, $pot_fee, $secret) {
+	function validate_v2($txid, $blockid, $amount, $topay, $pot_fee, $secret, $state) {
 		
-		$value = get_random_v2($amount, $txid, $blockid, $pot_fee);
+		$value = 0;
+		if (in_array($state, array(STATE_ARCHIVED, STATE_CASH_OUT, STATE_CASH_OUT_READY, STATE_CASH_OUT_INITIAL))) {
+			return 'SUCCESS';
+		}
+		if (in_array($state, array(STATE_POT_REFILL))) {
+			$value = 0;
+		}
+		if (in_array($state, array(STATE_SENTBACK_READY, STATE_SENTBACK))) {
+			$value = $amount;
+		}
+		if (in_array($state, array(STATE_INITIAL, STATE_READY, STATE_PAID))) {
+			$value = get_random_v2($amount, $txid, $blockid, $pot_fee);
+		}
+		if ($topay != $value) {
+			return 'INVALID_VALUE';
+		}
+		return 'SUCCESS';
+		
+	}
+
+	function validate_v3($txid, $blockid, $amount, $topay, $pot_fee, $secret, $state) {
+
+		$value = 0;
+		if (in_array($state, array(STATE_ARCHIVED, STATE_CASH_OUT, STATE_CASH_OUT_READY, STATE_CASH_OUT_INITIAL))) {
+			return 'SUCCESS';
+		}
+		if (in_array($state, array(STATE_POT_REFILL))) {
+			$value = 0;
+		}
+		if (in_array($state, array(STATE_SENTBACK_READY, STATE_SENTBACK))) {
+			$value = $amount;
+		}
+		if (in_array($state, array(STATE_INITIAL, STATE_READY, STATE_PAID))) {
+			$value = get_random_v3($amount, $txid, $blockid, $pot_fee);
+		}
 		if ($topay != $value) {
 			return 'INVALID_VALUE';
 		}
 		return 'SUCCESS';
 	}
 	
-	function validate_v3($txid, $blockid, $amount, $topay, $pot_fee, $secret) {
 	
-		$value = get_random_v3($amount, $txid, $blockid, $pot_fee);
-		if ($topay != $value) {
-			return 'INVALID_VALUE';
-		}
-		return 'SUCCESS';
-	}
-	
-	function validate_tx($txid, $amount, $category) {
+	function validate_tx($txid, $amount, $category, $state) {
 		global $client;
 		
+		
+		if ($category == 'send' && 
+				in_array($state, array(STATE_INITIAL, STATE_READY, STATE_POT_REFILL,
+										STATE_SENTBACK_READY, STATE_ARCHIVED, 
+										STATE_CASH_OUT_READY, STATE_CASH_OUT_INITIAL))) {
+			return 'SUCCESS';
+		}
+		if ($category == 'receive' &&
+				in_array($state, array(STATE_CASH_OUT, STATE_CASH_OUT_READY, STATE_CASH_OUT_INITIAL))) {
+			return 'SUCCESS';
+		}
+
 		$coind_failed = FALSE;
 		$coind_transaction = NULL;
 		try {
@@ -72,23 +112,24 @@
 		//print_r($row);
 		if ($row['version'] == 1) {
 			print ("auditing version 1 algorithm\n");
+			$result = 'NOT_SUPPORTED';
 		} elseif ($row['version'] == 2 || $row['version'] == 3) {
 			print ("auditing version 2 algorithm\n");
 			// gets original transaction and checks if it is ok
-			$result = validate_tx($row['tx'], $row['amount'], 'receive');
-			if ($result == 'SUCCESS')
-				$result = validate_tx($row['out'], - $row['actually_paid'], 'send');
+			$result = validate_tx($row['tx'], $row['amount'], 'receive', $row['state']);
 			// validate get_random
 			if ($result == 'SUCCESS') {
 				if ($row['version'] == 2) {
-					$result = validate_v2($row['tx'], $row['block'], $row['amount'], $row['topay'], $row['pot_fee'], $row['secret']);
+					$result = validate_v2($row['tx'], $row['block'], $row['amount'], $row['topay'], $row['pot_fee'], $row['secret'], $row['state']);
 				} else {
-					$result = validate_v3($row['tx'], $row['block'], $row['amount'], $row['topay'], $row['pot_fee'], $row['secret']);
+					$result = validate_v3($row['tx'], $row['block'], $row['amount'], $row['topay'], $row['pot_fee'], $row['secret'], $row['state']);
 				}
 			}
+			if ($result == 'SUCCESS')
+				$result = validate_tx($row['out'], - $row['actually_paid'], 'send', $row['state']);
 			// validate fee charging
 			if ($result == 'SUCCESS') {
-				$result = validate_fee($row['topay'], $row['actually_paid'], $row['fee']);
+				$result = validate_fee($row['topay'], $row['actually_paid'], $row['fee'], $row['state']);
 			}
 		} else {
 			print ("unknown algorithm version, unable to audit\n");

@@ -27,6 +27,7 @@ $audit_errors = array(
 	'AMOUNT_DOES_NOT_MATCH_OUT' => "Sent amount recorded in the database does match the amount reported by coind.",
 	'INVALID_VALUE' => "Value paid dos not match value calculated",
 	'WRONG_FEE' => "The fee charged does not match the fee calculated",
+	'NOT_SUPPORTED' => "This validations is not yet supported, please audit by hand.",
 );
 
 ?>
