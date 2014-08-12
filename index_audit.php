@@ -83,7 +83,7 @@ if ($dbversion != CURRENT_VERSION) {
 						if (data['transactions'][i]['state'] == "SUCCESS")
 							state = '<span class="label label-info" id="collecting">Ok!</span>';
 						else 
-							state = '<span class="label label-warning" id="collecting">Fail!</span>';
+							state = '<span class="label label-warning" id="collecting">' + data['transactions'][i]['state']  + '</span>';
 					
 						$tr = $('<tr></tr>');
 						$('#trans').append($tr);
