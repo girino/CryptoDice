@@ -86,7 +86,7 @@ if ($dbversion != CURRENT_VERSION) {
 
 <script>
 
-	$('#header-play').class("active");
+	$('#header-play').addClass("active");
 
 	var what = "all";
 	

@@ -43,7 +43,7 @@ if ($dbversion != CURRENT_VERSION) {
 <script>
 
 // sets this tab as selected
-	$('#header-audit').class("active");
+	$('#header-audit').addClass("active");
 
 	var what = "all";
 	
