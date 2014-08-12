@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="assets/bootstrap.min.css">
 	<link rel="stylesheet" href="assets/style.css">
 	<script src="assets/jquery-1.11.0.min.js"></script>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=none, initial-scale=1">
 </head>
 <body>
 	<div style="background: white; margin-bottom: 40px; width: 100%;">
