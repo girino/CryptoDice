@@ -69,10 +69,10 @@ if ($dbversion != CURRENT_VERSION) {
 					for(var i in data['transactions'])
 					{
 						var state = "";
-						if (data['transactions'][i]['state'] == "SUCCESS")
+						if (data['transactions'][i]['audit'] == "SUCCESS")
 							state = '<span class="label label-info" id="collecting">Ok!</span>';
 						else 
-							state = '<span class="label label-warning" id="collecting">' + data['transactions'][i]['state']  + '</span>';
+							state = '<span class="label label-warning" id="collecting">' + data['transactions'][i]['audit']  + '</span>';
 					
 						$tr = $('<tr></tr>');
 						$('#trans').append($tr);
