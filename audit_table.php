@@ -12,7 +12,7 @@
 	<meta name="viewport" content="width=none, initial-scale=1">
 </head>
 <body>
-	<div style="background: white; margin-bottom: 40px; width: 100%;">
+	<div class="container" style="background: white; margin-bottom: 40px;">
 		<div id="header">
 			<?php echo($config['name'] . ' - ' . $config['title']) ?>
 		</div>
@@ -43,10 +43,10 @@ if ($dbversion != CURRENT_VERSION) {
 	
 </div>
 
-<div class="jumbotron" style="text-align: center; padding: 20px;">	
+<div class="jumbotron" style="text-align: center; padding: 20px; overflow: auto !important;">	
 	<h2>Last transactions</h2>
 	<div class="table-responsive">
-		<table class="table table-hover table-striped" style="overflow: scroll;">
+		<table class="table table-hover table-striped">
 			<thead>
 				<tr>
 <?php 
