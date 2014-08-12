@@ -56,6 +56,7 @@ if ($dbversion != CURRENT_VERSION) {
 //$row = mysql_fetch_assoc($query);
 $keys = array('tx','block','out','address','amount','topay','actually_paid','date','out_date','state','secret','pot_fee','fee','version');
 //$keys = array_keys($row);
+echo "<td ></td>";
 foreach ($keys as $key) {
 	echo "<td >" . $key . "</td>";
 }
@@ -69,8 +70,8 @@ while($row = mysql_fetch_assoc($query))
 {
 	$audit = audit_single_row($row);
 	echo "<tr>";
-	echo '<td><span class="label label-' . (($audit == 'SUCCESS')?'info':'warning') . 
-			'" id="collecting">' . $row[$key] . '</span></td>';
+	echo '<td><span class="label label-' . (($audit == 'SUCCESS')?'success':'warning') . 
+			'" id="collecting">' . $audit . '</span></td>';
 	foreach ($keys as $key) {
 		echo "<td >" . $row[$key] . "</td>";
 	}
