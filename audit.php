@@ -110,6 +110,8 @@
 	
 	
 	function audit() {
+		global $audit_errors;
+		
 		// Audits transactions and generates report
 		print("Auditing transactions...\n");
 		
