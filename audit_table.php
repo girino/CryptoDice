@@ -43,7 +43,7 @@ foreach ($keys as $key) {
 $query = mysql_query('SELECT * FROM `transactions` ORDER BY id DESC, state DESC LIMIT 20;');
 while($row = mysql_fetch_assoc($query))
 {
-	$audit = audit_single_row($row);
+	//$audit = audit_single_row($row);
 	echo "<tr>";
 	foreach ($keys as $key) {
 		echo "<td >" . $row[$key] . "</td>";
