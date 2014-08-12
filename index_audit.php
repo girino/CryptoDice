@@ -64,18 +64,7 @@ if ($dbversion != CURRENT_VERSION) {
 				},
 				function(data){
 					data = JSON.parse(data);
-					$('#count').html(data['count']);
-					$('#paid').html(parseFloat(data['paid']).toFixed(<?php echo $config['precision'] ?>) + ' <?php echo $config['val'] ?>');
-					$('#unpaid').html(parseFloat(data['unpaid']).toFixed(<?php echo $config['precision'] ?>) + ' <?php echo $config['val'] ?>');
-					$('#received').html(parseFloat(data['received']).toFixed(<?php echo $config['precision'] ?>) + ' <?php echo $config['val'] ?>');
-					
-					var tmp20140808 = "Pot: " + (parseFloat(data['received']) - parseFloat(data['paid'])).toFixed(<?php echo $config['precision'] ?>);
-					if (!(data['actual']['tx'] === undefined)) { // nothing 
-						tmp20140808 = tmp20140808 + " (" + parseFloat(data['actual']['topay']).toFixed(<?php echo $config['precision'] ?>) + " needed to pay " + data['actual']['tx'].substring(0,32) + "...)";
-					}
-					
-					$('#collecting').html(tmp20140808);
-					
+
 					$('#trans').html('');
 					for(var i in data['transactions'])
 					{
