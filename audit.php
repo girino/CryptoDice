@@ -79,43 +79,50 @@
 		return 'SUCCESS';
 	}
 	
-	// Audits transactions and generates report
-	print("Auditing transactions...\n");
 	
-	$query = mysql_query('SELECT * FROM `transactions` ORDER BY `id` DESC');
-	while($row = mysql_fetch_assoc($query))
-	{
+	function audit() {
+		// Audits transactions and generates report
+		print("Auditing transactions...\n");
 		
-		$result = 'SUCCESS';
-		print ("Transaction: " . $row['tx'] . "\n");
-		//print_r($row);
-		if ($row['version'] == 1) {
-			print ("auditing version 1 algorithm\n");
-			$result = 'NOT_SUPPORTED';
-		} elseif ($row['version'] == 2) {
-			print ("auditing version 2 algorithm\n");
-			// gets original transaction and checks if it is ok
-			$result = validate_tx($row['tx'], $row['amount'], 'receive', $row['state']);
-			// validate get_random
-			if ($result == 'SUCCESS') {
-				$result = validate_v2($row['tx'], $row['block'], $row['amount'], $row['topay'], $row['pot_fee'], $row['secret'], $row['state']);
+		$query = mysql_query('SELECT * FROM `transactions` ORDER BY `id` DESC');
+		while($row = mysql_fetch_assoc($query))
+		{
+			
+			$result = 'SUCCESS';
+			print ("Transaction: " . $row['tx'] . "\n");
+			//print_r($row);
+			if ($row['version'] == 1) {
+				print ("auditing version 1 algorithm\n");
+				$result = 'NOT_SUPPORTED';
+			} elseif ($row['version'] == 2) {
+				print ("auditing version 2 algorithm\n");
+				// gets original transaction and checks if it is ok
+				$result = validate_tx($row['tx'], $row['amount'], 'receive', $row['state']);
+				// validate get_random
+				if ($result == 'SUCCESS') {
+					$result = validate_v2($row['tx'], $row['block'], $row['amount'], $row['topay'], $row['pot_fee'], $row['secret'], $row['state']);
+				}
+				if ($result == 'SUCCESS')
+					$result = validate_tx($row['out'], - $row['actually_paid'], 'send', $row['state']);
+				// validate fee charging
+				if ($result == 'SUCCESS') {
+					$result = validate_fee($row['topay'], $row['actually_paid'], $row['fee'], $row['state']);
+				}
+			} else {
+				print ("unknown algorithm version, unable to audit\n");
+				$result= 'ALG_UNKNOWN';
 			}
-			if ($result == 'SUCCESS')
-				$result = validate_tx($row['out'], - $row['actually_paid'], 'send', $row['state']);
-			// validate fee charging
-			if ($result == 'SUCCESS') {
-				$result = validate_fee($row['topay'], $row['actually_paid'], $row['fee'], $row['state']);
+			
+			if ($result != 'SUCCESS') {
+				print ("ERROR: " . $row['tx'] . ": " . $audit_errors[$result]. "\n");
+				// debug info
+				print_r($row);
 			}
-		} else {
-			print ("unknown algorithm version, unable to audit\n");
-			$result= 'ALG_UNKNOWN';
 		}
-		
-		if ($result != 'SUCCESS') {
-			print ("ERROR: " . $row['tx'] . ": " . $audit_errors[$result]. "\n");
-			// debug info
-			print_r($row);
-		}
+		print("Finished...\n");
 	}
-	print("Finished...\n");
+	
+	if (php_sapi_name() === 'cli') {
+		audit();
+	}
 ?>
