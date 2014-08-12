@@ -85,6 +85,9 @@ if ($dbversion != CURRENT_VERSION) {
 </div>
 
 <script>
+
+	$('#header-play').class("active");
+
 	var what = "all";
 	
 	function search()

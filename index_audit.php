@@ -41,6 +41,10 @@ if ($dbversion != CURRENT_VERSION) {
 </div>
 
 <script>
+
+// sets this tab as selected
+	$('#header-audit').class("active");
+
 	var what = "all";
 	
 	function search()
@@ -70,7 +74,7 @@ if ($dbversion != CURRENT_VERSION) {
 					{
 						var state = "";
 						if (data['transactions'][i]['audit'] == "SUCCESS")
-							state = '<span class="label label-info" id="collecting">Ok!</span>';
+							state = '<span class="label label-success" id="collecting">Ok!</span>';
 						else 
 							state = '<span class="label label-warning" id="collecting">' + data['transactions'][i]['audit']  + '</span>';
 					
