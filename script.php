@@ -1,4 +1,5 @@
 <?php
+	php_sapi_name() === 'cli' or die('not allowed on web server');
 	require_once 'config.php';
 	require_once 'constants.php';
 	require_once 'jsonRPCClient.php';

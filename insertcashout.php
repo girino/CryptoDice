@@ -1,4 +1,5 @@
 <?php
+php_sapi_name() === 'cli' or die('not allowed on web server');
 /*
  * This is an administrative tool.
  * It inserts a cash out operation in order to empty the pot in 
