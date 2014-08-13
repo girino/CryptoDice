@@ -3,19 +3,9 @@
 	require_once 'constants.php';
 	require_once 'jsonRPCClient.php';
 	require_once 'calculation_utils.php';
+	require_once 'check_db_ver.php';
+	
 	$client = new jsonRPCClient('http://' . $rpc['login'] . ':' . $rpc['password'] . '@' . $rpc['ip'] . ':' . $rpc['port'] . '/') or die('Error: could not connect to RPC server.');
-
-	$dbversion = 0;
-	// first checks if the version table exists
-	if(mysql_query('select 1 from `version`;') !== FALSE) {
-		$query = mysql_query('select max(`version`) from `version`;');
-		$row = mysql_fetch_row($query);
-		$dbversion = (int)$row[0];
-	}
-	if ($dbversion != CURRENT_VERSION) {
-		php_sapi_name() === 'cli' || die("Wrong DB version, please run 'php update_db.php'.\n");
-		$show_version_msg = TRUE;
-	}
 	
 	function validate_fee($topay, $actually_paid, $fee, $state) {
 		if (in_array($state, array(STATE_SENTBACK, STATE_PAID))) {

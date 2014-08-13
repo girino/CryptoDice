@@ -2,6 +2,7 @@
 <?php require_once 'constants.php'; ?>
 <?php require_once 'calculation_utils.php'; ?>
 <?php require_once 'audit.php'; ?>
+<?php require_once 'check_db_ver.php';?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,18 +25,6 @@
 			<li id="header-table" class="active"><a href="audit_table.php">Raw Audit data</a></li>
 			<li><a href="<?php echo($config['blockchain-addr'] . $config['address']) ?>">Transactions</a></li>
 		</ul>
-<?php 
-$dbversion = 0;
-// first checks if the version table exists
-if(mysql_query('select 1 from `version`;') !== FALSE) {
-	$query = mysql_query('select max(`version`) from `version`;');
-	$row = mysql_fetch_row($query);
-	$dbversion = (int)$row[0];
-}
-if ($dbversion != CURRENT_VERSION) {
-	$show_version_msg = TRUE;
-}
-?>
 <div class="jumbotron" style="text-align: center;">
   <h1><?php echo $config['full-name'] ?></h1>
   <p>Export all past transactions as table.</p>

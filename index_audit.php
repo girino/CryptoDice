@@ -1,17 +1,7 @@
 <?php include('header.php'); ?>
 <?php include('constants.php'); ?>
-<?php 
-$dbversion = 0;
-// first checks if the version table exists
-if(mysql_query('select 1 from `version`;') !== FALSE) {
-	$query = mysql_query('select max(`version`) from `version`;');
-	$row = mysql_fetch_row($query);
-	$dbversion = (int)$row[0];
-}
-if ($dbversion != CURRENT_VERSION) {
-	$show_version_msg = TRUE;
-}
-?>
+<?php require_once 'check_db_ver.php';?>
+
 <div class="jumbotron" style="text-align: center;">
   <h1><?php echo $config['full-name'] ?></h1>
   <p>Audit all past transactions.</p>
