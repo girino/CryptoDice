@@ -10,7 +10,7 @@ if(mysql_query('select 1 from `version`;') !== FALSE) {
 	$dbversion = (int)$row[0];
 }
 if ($dbversion != DB_VERSION) {
-	php_sapi_name() === 'cli' || die("Wrong DB version, please run 'php update_db.php'.\n");
+	php_sapi_name() !== 'cli' || die("Wrong DB version, please run 'php update_db.php'.\n");
 	$show_version_msg = TRUE;
 }
 ?>
